@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Sparkles, ChevronsLeftRight } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Sparkles } from 'lucide-react';
 
 interface ClinicalCase {
   id: string;
   title: string;
-  category: 'veneers' | 'restoration' | 'aligners' | 'whitening';
+  category: 'veneers' | 'restoration' | 'aligners';
   categoryLabel: string;
-  beforeImage: string;
-  afterImage: string;
+  image: string;
   shade: string;
   duration: string;
   visits: string;
@@ -20,8 +19,7 @@ const CLINICAL_CASES: ClinicalCase[] = [
     title: 'Feldspathic Porcelain Veneers',
     category: 'veneers',
     categoryLabel: 'Porcelain Veneers',
-    beforeImage: '/assets/images/clinical-cases/case1-before.jpg',
-    afterImage: '/assets/images/clinical-cases/case1-after.jpg',
+    image: '/assets/images/clinical-cases/case1-comparison.png',
     shade: 'Bleach Shade BL2 Natural',
     duration: '10 Days',
     visits: '2 Visits',
@@ -32,8 +30,7 @@ const CLINICAL_CASES: ClinicalCase[] = [
     title: 'Anterior Aesthetic Ceramic Restoration',
     category: 'restoration',
     categoryLabel: 'Aesthetic Restoration',
-    beforeImage: '/assets/images/clinical-cases/case2-before.jpg',
-    afterImage: '/assets/images/clinical-cases/case2-after.jpg',
+    image: '/assets/images/clinical-cases/case2-comparison.png',
     shade: 'High-Translucency E-Max BL1',
     duration: '14 Days',
     visits: '2 Visits',
@@ -44,8 +41,7 @@ const CLINICAL_CASES: ClinicalCase[] = [
     title: 'Clear Aligner Aesthetic Alignment',
     category: 'aligners',
     categoryLabel: 'Clear Aligners',
-    beforeImage: '/assets/images/clinical-cases/case3-before.jpg',
-    afterImage: '/assets/images/clinical-cases/case3-after.jpg',
+    image: '/assets/images/clinical-cases/case3-comparison.jpg',
     shade: 'Natural Enamel Harmony',
     duration: '6 Months',
     visits: '5 Sessions',
@@ -53,18 +49,14 @@ const CLINICAL_CASES: ClinicalCase[] = [
   },
 ];
 
-interface CaseSliderProps {
+interface CaseCardProps {
   caseData: ClinicalCase;
   index: number;
 }
 
-const CaseCard: React.FC<CaseSliderProps> = ({ caseData, index }) => {
-  const [sliderPos, setSliderPos] = useState(50);
-  const [isDragging, setIsDragging] = useState(false);
+const CaseCard: React.FC<CaseCardProps> = ({ caseData, index }) => {
   const [isCardHovered, setIsCardHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-
-  const containerRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Viewport reveal animation
@@ -88,37 +80,6 @@ const CaseCard: React.FC<CaseSliderProps> = ({ caseData, index }) => {
     return () => observer.disconnect();
   }, []);
 
-  const updatePosition = useCallback((clientX: number) => {
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = clientX - rect.left;
-    const percentage = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    setSliderPos(percentage);
-  }, []);
-
-  const handlePointerDown = (e: React.PointerEvent) => {
-    setIsDragging(true);
-    e.currentTarget.setPointerCapture(e.pointerId);
-    updatePosition(e.clientX);
-  };
-
-  const handlePointerMove = (e: React.PointerEvent) => {
-    if (isDragging) {
-      updatePosition(e.clientX);
-    }
-  };
-
-  const handlePointerUp = (e: React.PointerEvent) => {
-    if (isDragging) {
-      setIsDragging(false);
-      try {
-        e.currentTarget.releasePointerCapture(e.pointerId);
-      } catch {
-        // Pointer capture was already released
-      }
-    }
-  };
-
   return (
     <div
       ref={cardRef}
@@ -141,125 +102,31 @@ const CaseCard: React.FC<CaseSliderProps> = ({ caseData, index }) => {
         transitionDelay: `${index * 120}ms`,
       }}
     >
-      {/* Interactive Before/After Image Slider */}
+      {/* High-Resolution Clinical Case Comparison Image */}
       <div
-        ref={containerRef}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerCancel={handlePointerUp}
         style={{
           position: 'relative',
           width: '100%',
-          aspectRatio: '16/10',
+          aspectRatio: '16/9',
           overflow: 'hidden',
           backgroundColor: '#0a0a0c',
-          cursor: isDragging ? 'grabbing' : 'ew-resize',
-          userSelect: 'none',
-          WebkitUserSelect: 'none',
-          touchAction: 'none',
         }}
       >
-        {/* Layer 1: AFTER Image (Full container base) */}
-        <div
+        <img
+          src={caseData.image}
+          alt={`${caseData.title} Clinical Case`}
+          draggable={false}
+          loading="lazy"
           style={{
-            position: 'absolute',
-            inset: 0,
             width: '100%',
             height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center center',
+            display: 'block',
+            transform: isCardHovered ? 'scale(1.025)' : 'scale(1)',
+            transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
           }}
-        >
-          <img
-            src={caseData.afterImage}
-            alt={`${caseData.title} After Result`}
-            draggable={false}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center center',
-              display: 'block',
-              transform: isCardHovered ? 'scale(1.025)' : 'scale(1)',
-              transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          />
-
-          {/* AFTER Label Badge (Bottom Right) */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '12px',
-              right: '12px',
-              zIndex: 3,
-              padding: '4px 10px',
-              borderRadius: '9999px',
-              backgroundColor: 'rgba(255, 255, 255, 0.92)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              fontSize: '0.6875rem',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: '#0071e3',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.12)',
-              pointerEvents: 'none',
-            }}
-          >
-            AFTER
-          </div>
-        </div>
-
-        {/* Layer 2: BEFORE Image (Clipped Left Overlay) */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-            clipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)`,
-            WebkitClipPath: `polygon(0 0, ${sliderPos}% 0, ${sliderPos}% 100%, 0 100%)`,
-            zIndex: 2,
-          }}
-        >
-          <img
-            src={caseData.beforeImage}
-            alt={`${caseData.title} Before State`}
-            draggable={false}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center center',
-              display: 'block',
-              transform: isCardHovered ? 'scale(1.025)' : 'scale(1)',
-              transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-            }}
-          />
-
-          {/* BEFORE Label Badge (Bottom Left) */}
-          <div
-            style={{
-              position: 'absolute',
-              bottom: '12px',
-              left: '12px',
-              zIndex: 4,
-              padding: '4px 10px',
-              borderRadius: '9999px',
-              backgroundColor: 'rgba(29, 29, 31, 0.85)',
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-              fontSize: '0.6875rem',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: '#ffffff',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
-              pointerEvents: 'none',
-            }}
-          >
-            BEFORE
-          </div>
-        </div>
+        />
 
         {/* Top-Left Clinical Case Badge */}
         <div
@@ -309,47 +176,6 @@ const CaseCard: React.FC<CaseSliderProps> = ({ caseData, index }) => {
           }}
         >
           {caseData.categoryLabel}
-        </div>
-
-        {/* Draggable Vertical Divider & Handle */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: `${sliderPos}%`,
-            transform: 'translateX(-50%)',
-            width: '2px',
-            backgroundColor: '#ffffff',
-            zIndex: 6,
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.4)',
-            pointerEvents: 'none',
-          }}
-        >
-          {/* Apple-grade Center Handle */}
-          <div
-            style={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: isDragging ? 'translate(-50%, -50%) scale(1.12)' : 'translate(-50%, -50%) scale(1)',
-              width: '36px',
-              height: '36px',
-              borderRadius: '50%',
-              backgroundColor: '#ffffff',
-              boxShadow: isDragging
-                ? '0 6px 20px rgba(0, 0, 0, 0.35)'
-                : '0 4px 14px rgba(0, 0, 0, 0.22)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#1d1d1f',
-              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
-              pointerEvents: 'none',
-            }}
-          >
-            <ChevronsLeftRight size={16} />
-          </div>
         </div>
       </div>
 
@@ -418,7 +244,7 @@ const CaseCard: React.FC<CaseSliderProps> = ({ caseData, index }) => {
 };
 
 export const SmileGallery: React.FC = () => {
-  const [activeFilter, setActiveFilter] = useState<'all' | 'veneers' | 'restoration' | 'aligners' | 'whitening'>('all');
+  const [activeFilter, setActiveFilter] = useState<'all' | 'veneers' | 'restoration' | 'aligners'>('all');
 
   const filteredCases = activeFilter === 'all'
     ? CLINICAL_CASES
@@ -434,14 +260,13 @@ export const SmileGallery: React.FC = () => {
         borderTop: '1px solid rgba(0, 0, 0, 0.05)',
       }}
     >
-
       <div className="container">
         {/* Section Header */}
         <div className="section-header apple-reveal">
           <span className="eyebrow">Clinical Documentation</span>
           <h2 className="section-title">Verified transformations. Calibrated to millimeter precision.</h2>
           <p className="section-subtitle">
-            Every clinical outcome represents bespoke aesthetic artistry and micro-dentistry. Drag the interactive slider on any case to examine the preoperative dentition versus completed treatment.
+            Every clinical outcome represents bespoke aesthetic artistry and micro-dentistry. Examine documented clinical cases comparing preoperative dentition directly with completed treatment.
           </p>
         </div>
 
