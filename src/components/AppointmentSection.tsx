@@ -1,5 +1,6 @@
-import React, { useState, forwardRef } from 'react';
-import { CheckCircle2, AlertCircle, ArrowRight, Send } from 'lucide-react';
+import React, { useState, useEffect, forwardRef } from 'react';
+import { CheckCircle2, AlertCircle, ArrowRight, Send, Loader2 } from 'lucide-react';
+import { createAppointment } from '../lib/supabase';
 
 interface AppointmentSectionProps {
   initialTreatment?: string;
@@ -12,7 +13,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
       phone: '',
       email: '',
       date: '',
-      time: 'morning',
+      time: 'Morning (10:00 AM – 01:00 PM)',
       treatment: initialTreatment || 'General Dental Care & Consultation',
       message: '',
     });
@@ -20,43 +21,97 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
+    const [submittedDetails, setSubmittedDetails] = useState<typeof formData | null>(null);
+
+    // Synchronize selected treatment if user triggers it from other sections
+    useEffect(() => {
+      if (initialTreatment) {
+        setFormData((prev) => ({ ...prev, treatment: initialTreatment }));
+      }
+    }, [initialTreatment]);
 
     const validateForm = () => {
       const newErrors: Record<string, string> = {};
-      if (!formData.fullName.trim()) newErrors.fullName = 'Please provide your full name';
-      if (!formData.phone.trim() || formData.phone.length < 8)
-        newErrors.phone = 'Please provide a valid contact number';
-      if (!formData.email.trim() || !formData.email.includes('@'))
+      const trimmedName = formData.fullName.trim();
+      if (!trimmedName || trimmedName.length < 2) {
+        newErrors.fullName = 'Please provide your full name (minimum 2 characters)';
+      }
+
+      const phoneRegex = /^[+]?[\d\s-]{8,20}$/;
+      if (!formData.phone.trim() || !phoneRegex.test(formData.phone.trim())) {
+        newErrors.phone = 'Please provide a valid contact number (min 8 digits)';
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email.trim() || !emailRegex.test(formData.email.trim())) {
         newErrors.email = 'Please provide a valid email address';
-      if (!formData.date) newErrors.date = 'Please select a preferred date';
+      }
+
+      if (!formData.date) {
+        newErrors.date = 'Please select a preferred date';
+      } else {
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (formData.date < todayStr) {
+          newErrors.date = 'Preferred date cannot be in the past';
+        }
+      }
+
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
+      // Prevent duplicate submissions
+      if (isSubmitting) return;
+
       if (!validateForm()) return;
 
       setIsSubmitting(true);
-      // Simulate real-time API call
-      setTimeout(() => {
-        setIsSubmitting(false);
+      setSubmitError(null);
+
+      try {
+        await createAppointment({
+          name: formData.fullName.trim(),
+          phone: formData.phone.trim(),
+          email: formData.email.trim().toLowerCase(),
+          appointment_date: formData.date,
+          preferred_time: formData.time,
+          service: formData.treatment,
+          message: formData.message.trim(),
+          status: 'pending',
+          created_at: new Date().toISOString(),
+        });
+
+        setSubmittedDetails({ ...formData });
         setIsSubmitted(true);
-      }, 750);
+      } catch (err: unknown) {
+        console.error('Appointment submission error:', err);
+        const errorMsg =
+          err && typeof err === 'object' && 'message' in err
+            ? String((err as { message: unknown }).message)
+            : 'Unable to save appointment request. Please check your connection.';
+        setSubmitError(errorMsg);
+      } finally {
+        setIsSubmitting(false);
+      }
     };
 
     const resetForm = () => {
       setIsSubmitted(false);
+      setSubmitError(null);
       setFormData({
         fullName: '',
         phone: '',
         email: '',
         date: '',
-        time: 'morning',
-        treatment: 'General Dental Care & Consultation',
+        time: 'Morning (10:00 AM – 01:00 PM)',
+        treatment: initialTreatment || 'General Dental Care & Consultation',
         message: '',
       });
       setErrors({});
+      setSubmittedDetails(null);
     };
 
     return (
@@ -158,29 +213,81 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     lineHeight: 1.6,
                   }}
                 >
-                  Thank you, <strong>{formData.fullName}</strong>. Our clinic team has received your appointment request for <strong>{formData.treatment}</strong>.
+                  Thank you, <strong>{(submittedDetails || formData).fullName}</strong>. Our clinic team has received your appointment request for <strong>{(submittedDetails || formData).treatment}</strong>.
                 </p>
 
                 <div
                   style={{
-                    maxWidth: '460px',
+                    maxWidth: '480px',
                     margin: '0 auto 32px auto',
-                    padding: '16px 20px',
-                    borderRadius: '14px',
+                    padding: '20px 22px',
+                    borderRadius: '16px',
                     backgroundColor: '#ffffff',
-                    border: '1px solid rgba(0, 0, 0, 0.06)',
+                    border: '1px solid rgba(0, 0, 0, 0.07)',
                     fontSize: '0.875rem',
                     color: 'var(--text-secondary)',
                     textAlign: 'left',
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
                   }}
                 >
-                  <div style={{ fontWeight: 600, color: '#1d1d1f', marginBottom: '4px' }}>
-                    Next steps:
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '10px',
+                      paddingBottom: '8px',
+                      borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
+                    }}
+                  >
+                    <span style={{ fontWeight: 700, color: '#1d1d1f', fontSize: '0.9375rem' }}>
+                      Request Summary
+                    </span>
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        padding: '3px 10px',
+                        borderRadius: '9999px',
+                        backgroundColor: '#eff6ff',
+                        color: '#1d4ed8',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Status: Pending Desk Confirmation
+                    </span>
                   </div>
-                  <ul style={{ paddingLeft: '18px', lineHeight: 1.6 }}>
-                    <li>Our clinic staff will contact you at <strong>{formData.phone}</strong> to confirm your appointment time.</li>
+
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'auto 1fr',
+                      gap: '6px 14px',
+                      fontSize: '0.8125rem',
+                      color: '#4b5563',
+                      marginBottom: '14px',
+                    }}
+                  >
+                    <span style={{ fontWeight: 500 }}>Requested Date:</span>
+                    <span style={{ fontWeight: 600, color: '#1d1d1f' }}>
+                      {(submittedDetails || formData).date}
+                    </span>
+                    <span style={{ fontWeight: 500 }}>Preferred Window:</span>
+                    <span style={{ fontWeight: 600, color: '#1d1d1f' }}>
+                      {(submittedDetails || formData).time}
+                    </span>
+                    <span style={{ fontWeight: 500 }}>Contact Phone:</span>
+                    <span style={{ fontWeight: 600, color: '#1d1d1f' }}>
+                      {(submittedDetails || formData).phone}
+                    </span>
+                  </div>
+
+                  <div style={{ fontWeight: 600, color: '#1d1d1f', marginBottom: '6px' }}>
+                    What happens next:
+                  </div>
+                  <ul style={{ paddingLeft: '18px', lineHeight: 1.6, margin: 0, fontSize: '0.8125rem' }}>
+                    <li>Our front desk will call you at <strong>{(submittedDetails || formData).phone}</strong> to confirm the exact chair time.</li>
                     <li>Hospital Location: Azam Pura, Siddipet, Telangana 502103.</li>
-                    <li>Clinic Contact: +91 83098 64006 | Mon–Sat: 10am–8pm, Sun: 10:30am–2pm.</li>
+                    <li>Clinic Phone: +91 83098 64006 (Mon–Sat: 10am–8pm, Sun: 10:30am–2pm).</li>
                   </ul>
                 </div>
 
@@ -221,6 +328,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     <input
                       id="fullName"
                       type="text"
+                      disabled={isSubmitting}
                       placeholder="e.g. Eleanor Vance"
                       value={formData.fullName}
                       onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
@@ -229,7 +337,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         padding: '12px 16px',
                         borderRadius: '12px',
                         border: errors.fullName ? '1px solid #ff3b30' : '1px solid rgba(0, 0, 0, 0.1)',
-                        backgroundColor: '#ffffff',
+                        backgroundColor: isSubmitting ? '#f8f9fa' : '#ffffff',
                         fontSize: '0.9375rem',
                         color: '#1d1d1f',
                         outline: 'none',
@@ -260,6 +368,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     <input
                       id="phone"
                       type="tel"
+                      disabled={isSubmitting}
                       placeholder="+91 83098 64006"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -268,7 +377,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         padding: '12px 16px',
                         borderRadius: '12px',
                         border: errors.phone ? '1px solid #ff3b30' : '1px solid rgba(0, 0, 0, 0.1)',
-                        backgroundColor: '#ffffff',
+                        backgroundColor: isSubmitting ? '#f8f9fa' : '#ffffff',
                         fontSize: '0.9375rem',
                         color: '#1d1d1f',
                         outline: 'none',
@@ -298,6 +407,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     <input
                       id="email"
                       type="email"
+                      disabled={isSubmitting}
                       placeholder="patient@example.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -306,7 +416,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         padding: '12px 16px',
                         borderRadius: '12px',
                         border: errors.email ? '1px solid #ff3b30' : '1px solid rgba(0, 0, 0, 0.1)',
-                        backgroundColor: '#ffffff',
+                        backgroundColor: isSubmitting ? '#f8f9fa' : '#ffffff',
                         fontSize: '0.9375rem',
                         color: '#1d1d1f',
                         outline: 'none',
@@ -335,6 +445,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     </label>
                     <select
                       id="treatment"
+                      disabled={isSubmitting}
                       value={formData.treatment}
                       onChange={(e) => setFormData({ ...formData, treatment: e.target.value })}
                       style={{
@@ -342,7 +453,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         padding: '12px 16px',
                         borderRadius: '12px',
                         border: '1px solid rgba(0, 0, 0, 0.1)',
-                        backgroundColor: '#ffffff',
+                        backgroundColor: isSubmitting ? '#f8f9fa' : '#ffffff',
                         fontSize: '0.9375rem',
                         color: '#1d1d1f',
                         outline: 'none',
@@ -374,6 +485,8 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     <input
                       id="date"
                       type="date"
+                      disabled={isSubmitting}
+                      min={new Date().toISOString().split('T')[0]}
                       value={formData.date}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                       style={{
@@ -381,7 +494,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         padding: '12px 16px',
                         borderRadius: '12px',
                         border: errors.date ? '1px solid #ff3b30' : '1px solid rgba(0, 0, 0, 0.1)',
-                        backgroundColor: '#ffffff',
+                        backgroundColor: isSubmitting ? '#f8f9fa' : '#ffffff',
                         fontSize: '0.9375rem',
                         color: '#1d1d1f',
                         outline: 'none',
@@ -410,6 +523,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     </label>
                     <select
                       id="time"
+                      disabled={isSubmitting}
                       value={formData.time}
                       onChange={(e) => setFormData({ ...formData, time: e.target.value })}
                       style={{
@@ -417,21 +531,21 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         padding: '12px 16px',
                         borderRadius: '12px',
                         border: '1px solid rgba(0, 0, 0, 0.1)',
-                        backgroundColor: '#ffffff',
+                        backgroundColor: isSubmitting ? '#f8f9fa' : '#ffffff',
                         fontSize: '0.9375rem',
                         color: '#1d1d1f',
                         outline: 'none',
                       }}
                     >
-                      <option value="morning">Morning (10:00 AM – 01:00 PM)</option>
-                      <option value="afternoon">Afternoon (01:00 PM – 05:00 PM)</option>
-                      <option value="evening">Evening (05:00 PM – 08:00 PM)</option>
+                      <option value="Morning (10:00 AM – 01:00 PM)">Morning (10:00 AM – 01:00 PM)</option>
+                      <option value="Afternoon (01:00 PM – 05:00 PM)">Afternoon (01:00 PM – 05:00 PM)</option>
+                      <option value="Evening (05:00 PM – 08:00 PM)">Evening (05:00 PM – 08:00 PM)</option>
                     </select>
                   </div>
                 </div>
 
                 {/* Additional Clinical Notes */}
-                <div style={{ marginBottom: '28px' }}>
+                <div style={{ marginBottom: '24px' }}>
                   <label
                     htmlFor="message"
                     style={{
@@ -447,6 +561,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                   <textarea
                     id="message"
                     rows={3}
+                    disabled={isSubmitting}
                     placeholder="Tell us about your expectations, sensitivity history, or aesthetic goals..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -455,7 +570,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                       padding: '12px 16px',
                       borderRadius: '12px',
                       border: '1px solid rgba(0, 0, 0, 0.1)',
-                      backgroundColor: '#ffffff',
+                      backgroundColor: isSubmitting ? '#f8f9fa' : '#ffffff',
                       fontSize: '0.9375rem',
                       color: '#1d1d1f',
                       outline: 'none',
@@ -464,6 +579,46 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     }}
                   />
                 </div>
+
+                {/* Submission Error Banner */}
+                {submitError && (
+                  <div
+                    role="alert"
+                    style={{
+                      marginBottom: '20px',
+                      padding: '16px 20px',
+                      borderRadius: '14px',
+                      backgroundColor: '#fef2f2',
+                      border: '1px solid #fecaca',
+                      color: '#991b1b',
+                      fontSize: '0.875rem',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '12px',
+                      lineHeight: 1.5,
+                      animation: 'fadeIn 0.3s ease-out',
+                    }}
+                  >
+                    <AlertCircle size={20} color="#dc2626" style={{ flexShrink: 0, marginTop: '2px' }} />
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 600, marginBottom: '2px', color: '#991b1b' }}>
+                        Unable to save appointment
+                      </div>
+                      <div style={{ color: '#b91c1c', marginBottom: '8px', fontSize: '0.8125rem' }}>
+                        {submitError}
+                      </div>
+                      <div style={{ fontSize: '0.8125rem', color: '#7f1d1d' }}>
+                        For immediate assistance, please call our clinic desk directly at{' '}
+                        <a
+                          href="tel:+918309864006"
+                          style={{ fontWeight: 600, color: '#991b1b', textDecoration: 'underline' }}
+                        >
+                          +91 83098 64006
+                        </a>.
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Submit Button */}
                 <button
@@ -476,11 +631,16 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     fontSize: '1rem',
                     fontWeight: 600,
                     boxShadow: '0 8px 24px rgba(0, 113, 227, 0.25)',
+                    cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                    opacity: isSubmitting ? 0.8 : 1,
                   }}
                   id="submit-appointment-btn"
                 >
                   {isSubmitting ? (
-                    <span>Submitting Request...</span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                      <Loader2 size={18} className="appointment-spin" />
+                      <span>Saving Appointment...</span>
+                    </span>
                   ) : (
                     <>
                       <Send size={16} />
@@ -506,6 +666,13 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
         </div>
 
         <style>{`
+          @keyframes appointmentSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+          }
+          .appointment-spin {
+            animation: appointmentSpin 0.9s linear infinite;
+          }
           @media (max-width: 768px) {
             .form-grid {
               grid-template-columns: 1fr !important;
