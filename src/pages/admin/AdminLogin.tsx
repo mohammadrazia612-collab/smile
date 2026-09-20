@@ -50,7 +50,13 @@ export const AdminLogin: React.FC = () => {
           : '';
 
       const lower = rawMsg.toLowerCase();
-      if (lower.includes('email not confirmed')) {
+      if (lower.includes('database error querying schema')) {
+        setError(
+          'Supabase schema mismatch: Please run "DELETE FROM auth.users WHERE email = \'' +
+            email.trim() +
+            '\';" in your Supabase SQL Editor, then create the user cleanly in Authentication -> Users with "Auto Confirm" turned ON.'
+        );
+      } else if (lower.includes('email not confirmed')) {
         setError(
           'Your admin account email is not confirmed yet. Run "UPDATE auth.users SET email_confirmed_at = now();" in your Supabase SQL Editor, or turn off "Confirm email" in Supabase Auth settings.'
         );
