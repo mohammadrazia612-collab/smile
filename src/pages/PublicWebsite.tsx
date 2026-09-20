@@ -16,6 +16,7 @@ import { Technology } from '../components/Technology';
 import { FAQSection } from '../components/FAQSection';
 import { AppointmentSection } from '../components/AppointmentSection';
 import { ContactSection } from '../components/ContactSection';
+import { RachuSmallT } from '../components/RachuSmallT';
 import { Footer } from '../components/Footer';
 
 import { useSmoothScroll } from '../hooks/useSmoothScroll';
@@ -99,7 +100,10 @@ export const PublicWebsite: React.FC = () => {
         {/* 9. Results / Clinical Cases Portfolio */}
         <SmileGallery />
 
-        {/* 10. Testimonials */}
+        {/* 10. RACHU SMALL T Feature Showcase */}
+        <RachuSmallT />
+
+        {/* 11. Testimonials */}
         <Testimonials />
 
         {/* 11. Trust & Key Benefits */}

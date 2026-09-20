@@ -22,6 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
     { label: 'Technology', href: '#technology' },
     { label: 'Interactive Cluster', href: '#cluster' },
     { label: 'Results', href: '#gallery' },
+    { label: 'Rachu Small T', href: '#rachu-small-t' },
     { label: 'Experience', href: '#experience' },
     { label: 'About', href: '#about' },
     { label: 'Contact', href: '#contact' },
