@@ -35,8 +35,8 @@ export const HeroMedia: React.FC<HeroMediaProps> = ({ scrollY, imageMode = 'scul
           inset: 0,
           width: '100%',
           height: '100%',
-          transform: `translateY(${translateY}px) scale(${scale})`,
-          transition: 'transform 0.1s linear',
+          transform: `translate3d(0, ${translateY.toFixed(2)}px, 0) scale3d(${scale.toFixed(4)}, ${scale.toFixed(4)}, 1)`,
+          willChange: 'transform',
         }}
       >
         {/* Option A: Existing Architectural Ceramic Sculpture */}

@@ -46,6 +46,16 @@ export const BeforeAfter: React.FC = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      setSliderPosition((prev) => Math.max(0, prev - (e.shiftKey ? 8 : 2.5)));
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      setSliderPosition((prev) => Math.min(100, prev + (e.shiftKey ? 8 : 2.5)));
+    }
+  };
+
   return (
     <section
       id="results"
@@ -58,7 +68,7 @@ export const BeforeAfter: React.FC = () => {
     >
       <div className="container">
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header apple-reveal">
           <span className="eyebrow">Aesthetic Precision</span>
           <h2 className="section-title">Harmonious smiles, calibrated to millimeter accuracy.</h2>
           <p className="section-subtitle">
@@ -69,6 +79,13 @@ export const BeforeAfter: React.FC = () => {
         {/* Before / After Slider Box */}
         <div
           ref={containerRef}
+          role="slider"
+          aria-label="Interactive before and after comparison slider. Use left and right arrow keys to adjust."
+          aria-valuenow={Math.round(sliderPosition)}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          tabIndex={0}
+          onKeyDown={handleKeyDown}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -200,8 +217,10 @@ export const BeforeAfter: React.FC = () => {
               width: '2px',
               backgroundColor: '#ffffff',
               zIndex: 10,
-              boxShadow: '0 0 10px rgba(0,0,0,0.35)',
+              boxShadow: '0 0 12px rgba(0, 0, 0, 0.4)',
               pointerEvents: 'none',
+              willChange: 'left',
+              transition: isDragging ? 'none' : 'left 0.12s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
             {/* Apple-style Round Center Handle */}
@@ -210,19 +229,19 @@ export const BeforeAfter: React.FC = () => {
                 position: 'absolute',
                 top: '50%',
                 left: '50%',
-                transform: isDragging ? 'translate(-50%, -50%) scale(1.1)' : 'translate(-50%, -50%) scale(1)',
+                transform: isDragging ? 'translate(-50%, -50%) scale(1.14)' : 'translate(-50%, -50%) scale(1)',
                 width: '42px',
                 height: '42px',
                 borderRadius: '50%',
                 backgroundColor: '#ffffff',
                 boxShadow: isDragging
-                  ? '0 6px 24px rgba(0, 0, 0, 0.35)'
-                  : '0 4px 18px rgba(0, 0, 0, 0.28)',
+                  ? '0 8px 28px rgba(0, 0, 0, 0.38)'
+                  : '0 4px 18px rgba(0, 0, 0, 0.24)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#1d1d1f',
-                transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+                transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease',
               }}
             >
               <ChevronsLeftRight size={18} />

@@ -122,10 +122,17 @@ export const InteractiveCluster: React.FC = () => {
   useEffect(() => {
     let animFrameId: number;
 
-    const animatePhysics = () => {
-      // Smooth lerp (9% per frame for fluid Apple-style inertia)
-      currentPos.current.x += (targetPos.current.x - currentPos.current.x) * 0.09;
-      currentPos.current.y += (targetPos.current.y - currentPos.current.y) * 0.09;
+    const animatePhysics = (time: number) => {
+      // Ambient breathing micro-drift so the cluster feels organic and responsive even when idle
+      const idleDriftX = Math.sin(time * 0.0012) * 0.04;
+      const idleDriftY = Math.cos(time * 0.001) * 0.04;
+
+      const effectiveTargetX = targetPos.current.x + idleDriftX;
+      const effectiveTargetY = targetPos.current.y + idleDriftY;
+
+      // Smooth lerp (8.5% per frame for fluid Apple-style inertia)
+      currentPos.current.x += (effectiveTargetX - currentPos.current.x) * 0.085;
+      currentPos.current.y += (effectiveTargetY - currentPos.current.y) * 0.085;
 
       if (containerRef.current) {
         containerRef.current.style.setProperty('--cluster-x', currentPos.current.x.toFixed(4));
@@ -174,7 +181,7 @@ export const InteractiveCluster: React.FC = () => {
     >
       <div className="container">
         {/* Header */}
-        <div className="section-header">
+        <div className="section-header apple-reveal">
           <span className="eyebrow">Interactive Anatomy</span>
           <h2 className="section-title">The physics of bio-mimetic perfection.</h2>
           <p className="section-subtitle">

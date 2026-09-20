@@ -59,7 +59,7 @@ export const Testimonials: React.FC = () => {
     >
       <div className="container">
         {/* Header */}
-        <div className="section-header">
+        <div className="section-header apple-reveal">
           <span className="eyebrow">Google Business Reviews</span>
           <h2 className="section-title">Rated 4.9 / 5 with 51 Google Reviews</h2>
           <p className="section-subtitle">

@@ -72,7 +72,7 @@ export const FAQSection: React.FC = () => {
     >
       <div className="container-narrow">
         {/* Section Header */}
-        <div className="section-header">
+        <div className="section-header apple-reveal">
           <span className="eyebrow">Common Inquiries</span>
           <h2 className="section-title">Frequently asked questions.</h2>
           <p className="section-subtitle">

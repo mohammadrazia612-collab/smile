@@ -218,6 +218,7 @@ export const Statistics: React.FC = () => {
                       color: '#1d1d1f',
                       fontFamily: 'var(--font-sans)',
                       whiteSpace: 'nowrap',
+                      fontVariantNumeric: 'tabular-nums',
                     }}
                   >
                     {item.type === 'number'

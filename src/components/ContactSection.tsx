@@ -14,7 +14,7 @@ export const ContactSection: React.FC = () => {
     >
       <div className="container">
         {/* Header */}
-        <div className="section-header">
+        <div className="section-header apple-reveal">
           <span className="eyebrow">Connect With Us</span>
           <h2 className="section-title">We look forward to welcoming you.</h2>
           <p className="section-subtitle">

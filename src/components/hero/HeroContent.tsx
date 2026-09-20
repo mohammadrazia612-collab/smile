@@ -22,9 +22,9 @@ export const HeroContent: React.FC<HeroContentProps> = ({ scrollY }) => {
         maxWidth: '920px',
         margin: '0 auto',
         padding: '0 20px',
-        transform: `translateY(${textTranslateY}px)`,
+        transform: `translate3d(0, ${textTranslateY.toFixed(2)}px, 0)`,
         opacity: textOpacity,
-        transition: 'transform 0.1s linear, opacity 0.1s linear',
+        willChange: 'transform, opacity',
       }}
     >
       {/* 1. Eyebrow Badge Pill */}

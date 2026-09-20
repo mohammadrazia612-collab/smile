@@ -67,7 +67,7 @@ export const Technology: React.FC = () => {
     >
       <div className="container">
         {/* Apple Keynote Style Header */}
-        <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 64px auto' }}>
+        <div className="apple-reveal" style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 64px auto' }}>
           <span className="eyebrow">Modern Clinical Infrastructure</span>
           <h2
             style={{

@@ -76,8 +76,9 @@ export const QuickServices: React.FC<QuickServicesProps> = ({ onSelectService })
       }}
     >
       <div className="container">
-        {/* Section Mini Header */}
+        {/* Section Header */}
         <div
+          className="apple-reveal"
           style={{
             display: 'flex',
             flexWrap: 'wrap',
@@ -123,6 +124,7 @@ export const QuickServices: React.FC<QuickServicesProps> = ({ onSelectService })
           {services.map((service) => (
             <div
               key={service.id}
+              className="apple-card-tilt"
               onClick={() => onSelectService(service.treatmentName)}
               style={{
                 backgroundColor: '#ffffff',

@@ -36,7 +36,7 @@ export const PatientExperience: React.FC = () => {
     >
       <div className="container">
         {/* Header */}
-        <div className="section-header">
+        <div className="section-header apple-reveal">
           <span className="eyebrow">Patient Experience</span>
           <h2 className="section-title">Comfortable, reassuring care designed around your peace of mind.</h2>
           <p className="section-subtitle">

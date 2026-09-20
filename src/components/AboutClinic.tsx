@@ -27,7 +27,7 @@ export const AboutClinic: React.FC<AboutClinicProps> = ({ onExploreClick }) => {
           className="about-grid"
         >
           {/* Left Column: Story Editorial */}
-          <div>
+          <div className="apple-reveal">
             <span className="eyebrow">About Our Hospital</span>
             <h2
               style={{
