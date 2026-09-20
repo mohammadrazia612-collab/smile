@@ -72,6 +72,7 @@ export const AdminDashboard: React.FC = () => {
     name: '',
     phone: '',
     email: '',
+    dob: '',
     appointment_date: new Date().toISOString().split('T')[0],
     preferred_time: 'Morning (10:00 AM – 01:00 PM)',
     service: 'General Dental Care & Consultation',
@@ -233,6 +234,7 @@ export const AdminDashboard: React.FC = () => {
         name: newAppointment.name.trim(),
         phone: newAppointment.phone.trim(),
         email: newAppointment.email.trim().toLowerCase(),
+        dob: newAppointment.dob ? newAppointment.dob : undefined,
         appointment_date: newAppointment.appointment_date,
         preferred_time: newAppointment.preferred_time,
         service: newAppointment.service,
@@ -247,6 +249,7 @@ export const AdminDashboard: React.FC = () => {
         name: '',
         phone: '',
         email: '',
+        dob: '',
         appointment_date: new Date().toISOString().split('T')[0],
         preferred_time: 'Morning (10:00 AM – 01:00 PM)',
         service: 'General Dental Care & Consultation',
@@ -901,7 +904,7 @@ export const AdminDashboard: React.FC = () => {
               <div>Loading appointments from Supabase...</div>
             </div>
           ) : filteredAppointments.length === 0 ? (
-            <div style={{ padding: '64px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
+            <div style={{ padding: '56px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
               <div
                 style={{
                   width: 48,
@@ -916,12 +919,24 @@ export const AdminDashboard: React.FC = () => {
               >
                 <Filter size={20} color="var(--text-muted)" />
               </div>
-              <div style={{ fontWeight: 600, color: '#1d1d1f', marginBottom: '4px' }}>
-                No appointments match your filters
+              <div style={{ fontWeight: 600, color: '#1d1d1f', marginBottom: '6px', fontSize: '1rem' }}>
+                {appointments.length === 0
+                  ? 'No patient appointments found'
+                  : 'No appointments match your filters'}
               </div>
-              <div style={{ fontSize: '0.8125rem' }}>
-                Try changing your search query or status filter.
+              <div style={{ fontSize: '0.8125rem', maxWidth: '480px', margin: '0 auto 16px auto', lineHeight: 1.5 }}>
+                {appointments.length === 0
+                  ? 'Appointments submitted by visitors through the website form will appear here automatically.'
+                  : 'Try adjusting your search query, status tab, or date filter.'}
               </div>
+              <button
+                onClick={fetchData}
+                className="btn btn-secondary"
+                style={{ padding: '6px 14px', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <RefreshCw size={13} />
+                <span>Refresh Bookings</span>
+              </button>
             </div>
           ) : (
             <div style={{ overflowX: 'auto' }}>
@@ -961,8 +976,22 @@ export const AdminDashboard: React.FC = () => {
                       >
                         {/* Patient Name & Contacts */}
                         <td style={{ padding: '16px 20px' }}>
-                          <div style={{ fontWeight: 600, color: '#1d1d1f', marginBottom: '2px' }}>
-                            {app.name}
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px', flexWrap: 'wrap' }}>
+                            <span style={{ fontWeight: 600, color: '#1d1d1f' }}>{app.name}</span>
+                            {app.dob && (
+                              <span
+                                style={{
+                                  fontSize: '0.6875rem',
+                                  padding: '1px 6px',
+                                  borderRadius: '6px',
+                                  backgroundColor: 'rgba(0, 113, 227, 0.08)',
+                                  color: 'var(--accent-primary)',
+                                  fontWeight: 600,
+                                }}
+                              >
+                                DOB: {app.dob}
+                              </span>
+                            )}
                           </div>
                           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', gap: '12px' }}>
                             <a
@@ -1232,9 +1261,23 @@ export const AdminDashboard: React.FC = () => {
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '4px' }}>
                   Patient
                 </div>
-                <div style={{ fontSize: '1.0625rem', fontWeight: 700, color: '#1d1d1f', marginBottom: '8px' }}>
+                <div style={{ fontSize: '1.0625rem', fontWeight: 700, color: '#1d1d1f', marginBottom: '4px' }}>
                   {selectedAppointment.name}
                 </div>
+                {selectedAppointment.dob && (
+                  <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', marginBottom: '8px' }}>
+                    <span style={{ fontWeight: 600 }}>Date of Birth:</span> {selectedAppointment.dob}
+                    {(() => {
+                      const b = new Date(selectedAppointment.dob);
+                      if (isNaN(b.getTime())) return '';
+                      const t = new Date();
+                      let a = t.getFullYear() - b.getFullYear();
+                      const m = t.getMonth() - b.getMonth();
+                      if (m < 0 || (m === 0 && t.getDate() < b.getDate())) a--;
+                      return a >= 0 ? ` (${a} years old)` : '';
+                    })()}
+                  </div>
+                )}
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', fontSize: '0.8125rem' }}>
                   <a
                     href={`tel:${selectedAppointment.phone}`}
@@ -1468,26 +1511,49 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, marginBottom: '6px' }}>
-                  Email Address *
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="patient@gmail.com"
-                  value={newAppointment.email}
-                  onChange={(e) => setNewAppointment({ ...newAppointment, email: e.target.value })}
-                  style={{
-                    width: '100%',
-                    padding: '10px 12px',
-                    borderRadius: '10px',
-                    border: '1px solid rgba(0,0,0,0.12)',
-                    fontSize: '0.875rem',
-                    outline: 'none',
-                    boxSizing: 'border-box',
-                  }}
-                />
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, marginBottom: '6px' }}>
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="patient@gmail.com"
+                    value={newAppointment.email}
+                    onChange={(e) => setNewAppointment({ ...newAppointment, email: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(0,0,0,0.12)',
+                      fontSize: '0.875rem',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, marginBottom: '6px' }}>
+                    Patient Date of Birth (Optional)
+                  </label>
+                  <input
+                    type="date"
+                    max={new Date().toISOString().split('T')[0]}
+                    value={newAppointment.dob}
+                    onChange={(e) => setNewAppointment({ ...newAppointment, dob: e.target.value })}
+                    style={{
+                      width: '100%',
+                      padding: '10px 12px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(0,0,0,0.12)',
+                      fontSize: '0.875rem',
+                      outline: 'none',
+                      boxSizing: 'border-box',
+                    }}
+                  />
+                </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '14px' }}>
@@ -1498,6 +1564,7 @@ export const AdminDashboard: React.FC = () => {
                   <input
                     type="date"
                     required
+                    min={new Date().toISOString().split('T')[0]}
                     value={newAppointment.appointment_date}
                     onChange={(e) => setNewAppointment({ ...newAppointment, appointment_date: e.target.value })}
                     style={{

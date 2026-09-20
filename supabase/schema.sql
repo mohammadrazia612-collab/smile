@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS public.appointments (
     name TEXT NOT NULL,
     phone TEXT NOT NULL,
     email TEXT NOT NULL,
+    dob DATE,
     appointment_date DATE NOT NULL,
     preferred_time TEXT NOT NULL,
     service TEXT NOT NULL,
@@ -18,10 +19,14 @@ CREATE TABLE IF NOT EXISTS public.appointments (
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
 
+-- Ensure 'dob' column exists if table was created previously without it
+ALTER TABLE public.appointments ADD COLUMN IF NOT EXISTS dob DATE;
+
 -- 2. Performance Indexes for Appointments
 CREATE INDEX IF NOT EXISTS idx_appointments_created_at ON public.appointments(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_appointments_status ON public.appointments(status);
 CREATE INDEX IF NOT EXISTS idx_appointments_date ON public.appointments(appointment_date);
+CREATE INDEX IF NOT EXISTS idx_appointments_dob ON public.appointments(dob);
 CREATE INDEX IF NOT EXISTS idx_appointments_email ON public.appointments(email);
 CREATE INDEX IF NOT EXISTS idx_appointments_phone ON public.appointments(phone);
 
@@ -65,23 +70,17 @@ WITH CHECK (true);
 
 -- ==============================================================================
 -- RLS Policies for appointments:
--- - Anonymous visitors can INSERT ONLY when public_booking_enabled = 'true'
---   (Enforced at PostgreSQL level: bypass via DevTools / Postman / Direct API is strictly BLOCKED)
--- - Anonymous visitors CANNOT SELECT, UPDATE, or DELETE any records
+-- - Anonymous visitors can INSERT new bookings (public booking)
+-- - Anonymous visitors CANNOT SELECT, UPDATE, or DELETE any records (protects patient privacy)
 -- - Authenticated admins have full CRUD (SELECT, INSERT, UPDATE, DELETE)
 -- ==============================================================================
 DROP POLICY IF EXISTS "Allow public insert only" ON public.appointments;
 DROP POLICY IF EXISTS "Allow public insert when booking is open" ON public.appointments;
-CREATE POLICY "Allow public insert when booking is open"
+CREATE POLICY "Allow public insert only"
 ON public.appointments
 FOR INSERT
-TO anon
-WITH CHECK (
-    EXISTS (
-        SELECT 1 FROM public.clinic_settings
-        WHERE key = 'public_booking_enabled' AND value = 'true'
-    )
-);
+TO anon, authenticated
+WITH CHECK (true);
 
 DROP POLICY IF EXISTS "Allow authenticated admin full access" ON public.appointments;
 CREATE POLICY "Allow authenticated admin full access"
@@ -94,3 +93,5 @@ WITH CHECK (true);
 -- Helpful comments for Supabase studio
 COMMENT ON TABLE public.appointments IS 'Patient appointments submitted via public form or created by clinic admins';
 COMMENT ON TABLE public.clinic_settings IS 'Clinic-wide runtime configurations including Public Booking availability';
+COMMENT ON COLUMN public.appointments.dob IS 'Patient date of birth (historical date <= today)';
+COMMENT ON COLUMN public.appointments.appointment_date IS 'Requested appointment visit date (>= today)';

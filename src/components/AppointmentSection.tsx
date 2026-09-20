@@ -12,6 +12,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
       fullName: '',
       phone: '',
       email: '',
+      dob: '',
       date: '',
       time: 'Morning (10:00 AM – 01:00 PM)',
       treatment: initialTreatment || 'General Dental Care & Consultation',
@@ -24,6 +25,9 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [submittedDetails, setSubmittedDetails] = useState<typeof formData | null>(null);
     const [isBookingOpen, setIsBookingOpen] = useState<boolean>(true);
+
+    // Dynamic today string in YYYY-MM-DD format
+    const todayStr = new Date().toISOString().split('T')[0];
 
     // Check public booking status on mount
     useEffect(() => {
@@ -62,12 +66,26 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
         newErrors.email = 'Please provide a valid email address';
       }
 
-      if (!formData.date) {
-        newErrors.date = 'Please select a preferred date';
+      // 1. Patient Date of Birth validation:
+      // Accepts historical dates (01/01/2000, 15/06/1995, 10/12/1985, etc.)
+      // Maximum allowed date is dynamically today (NOT hard-coded 2026)
+      if (!formData.dob) {
+        newErrors.dob = 'Please select patient date of birth';
       } else {
-        const todayStr = new Date().toISOString().split('T')[0];
+        if (formData.dob > todayStr) {
+          newErrors.dob = 'Date of birth cannot be in the future';
+        } else if (formData.dob < '1900-01-01') {
+          newErrors.dob = 'Please enter a valid date of birth (after 1900)';
+        }
+      }
+
+      // 2. Preferred Appointment Date validation:
+      // Must only allow today or future dates
+      if (!formData.date) {
+        newErrors.date = 'Please select a preferred appointment date';
+      } else {
         if (formData.date < todayStr) {
-          newErrors.date = 'Preferred date cannot be in the past';
+          newErrors.date = 'Appointment date cannot be in the past';
         }
       }
 
@@ -90,6 +108,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
           name: formData.fullName.trim(),
           phone: formData.phone.trim(),
           email: formData.email.trim().toLowerCase(),
+          dob: formData.dob,
           appointment_date: formData.date,
           preferred_time: formData.time,
           service: formData.treatment,
@@ -119,6 +138,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
         fullName: '',
         phone: '',
         email: '',
+        dob: '',
         date: '',
         time: 'Morning (10:00 AM – 01:00 PM)',
         treatment: initialTreatment || 'General Dental Care & Consultation',
@@ -410,6 +430,21 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                       marginBottom: '14px',
                     }}
                   >
+                    <span style={{ fontWeight: 500 }}>Patient DOB:</span>
+                    <span style={{ fontWeight: 600, color: '#1d1d1f' }}>
+                      {(submittedDetails || formData).dob}
+                      {(() => {
+                        const d = (submittedDetails || formData).dob;
+                        if (!d) return '';
+                        const b = new Date(d);
+                        if (isNaN(b.getTime())) return '';
+                        const t = new Date();
+                        let a = t.getFullYear() - b.getFullYear();
+                        const m = t.getMonth() - b.getMonth();
+                        if (m < 0 || (m === 0 && t.getDate() < b.getDate())) a--;
+                        return a >= 0 ? ` (${a} yrs)` : '';
+                      })()}
+                    </span>
                     <span style={{ fontWeight: 500 }}>Requested Date:</span>
                     <span style={{ fontWeight: 600, color: '#1d1d1f' }}>
                       {(submittedDetails || formData).date}
@@ -572,6 +607,60 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     )}
                   </div>
 
+                  {/* Patient Date of Birth (Allows past dates like 01/01/2000, 15/06/1995, 1990) */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <label
+                        htmlFor="dob"
+                        style={{
+                          display: 'block',
+                          fontSize: '0.8125rem',
+                          fontWeight: 600,
+                          color: '#1d1d1f',
+                        }}
+                      >
+                        Patient Date of Birth *
+                      </label>
+                      {formData.dob && (() => {
+                        const b = new Date(formData.dob);
+                        if (isNaN(b.getTime())) return null;
+                        const t = new Date();
+                        let a = t.getFullYear() - b.getFullYear();
+                        const m = t.getMonth() - b.getMonth();
+                        if (m < 0 || (m === 0 && t.getDate() < b.getDate())) a--;
+                        return a >= 0 ? (
+                          <span style={{ fontSize: '0.75rem', color: 'var(--accent-primary)', fontWeight: 600 }}>
+                            Age: {a} yrs
+                          </span>
+                        ) : null;
+                      })()}
+                    </div>
+                    <input
+                      id="dob"
+                      type="date"
+                      disabled={isSubmitting}
+                      max={todayStr}
+                      min="1900-01-01"
+                      value={formData.dob}
+                      onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        borderRadius: '12px',
+                        border: errors.dob ? '1px solid #ff3b30' : '1px solid rgba(0, 0, 0, 0.1)',
+                        backgroundColor: isSubmitting ? '#f8f9fa' : '#ffffff',
+                        fontSize: '0.9375rem',
+                        color: '#1d1d1f',
+                        outline: 'none',
+                      }}
+                    />
+                    {errors.dob && (
+                      <span style={{ fontSize: '0.75rem', color: '#ff3b30', display: 'flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
+                        <AlertCircle size={12} /> {errors.dob}
+                      </span>
+                    )}
+                  </div>
+
                   {/* Treatment of Interest */}
                   <div>
                     <label
@@ -611,7 +700,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     </select>
                   </div>
 
-                  {/* Preferred Date */}
+                  {/* Preferred Appointment Date (Today or Future Dates Only) */}
                   <div>
                     <label
                       htmlFor="date"
@@ -623,13 +712,13 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         marginBottom: '8px',
                       }}
                     >
-                      Preferred Date *
+                      Preferred Appointment Date *
                     </label>
                     <input
                       id="date"
                       type="date"
                       disabled={isSubmitting}
-                      min={new Date().toISOString().split('T')[0]}
+                      min={todayStr}
                       value={formData.date}
                       onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                       style={{
@@ -651,7 +740,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                   </div>
 
                   {/* Preferred Time Window */}
-                  <div>
+                  <div style={{ gridColumn: '1 / -1' }}>
                     <label
                       htmlFor="time"
                       style={{

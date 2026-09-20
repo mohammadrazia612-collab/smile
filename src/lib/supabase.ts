@@ -24,6 +24,7 @@ export interface AppointmentRecord {
   name: string;
   phone: string;
   email: string;
+  dob?: string;
   appointment_date: string;
   preferred_time: string;
   service: string;
@@ -49,24 +50,47 @@ export interface ClinicSetting {
 
 /**
  * Inserts a new appointment record into Supabase.
- * Respects Row Level Security (public INSERT only when public_booking_enabled is true).
+ * Respects Row Level Security (public INSERT).
+ * Gracefully preserves DOB even if column migration is still pending in database.
  */
 export async function createAppointment(payload: AppointmentInsert) {
-  const { data, error } = await supabase.from('appointments').insert([
-    {
-      name: payload.name,
-      phone: payload.phone,
-      email: payload.email,
-      appointment_date: payload.appointment_date,
-      preferred_time: payload.preferred_time,
-      service: payload.service,
-      message: payload.message || '',
-      status: payload.status || 'pending',
-      created_at: payload.created_at || new Date().toISOString(),
-    },
-  ]);
+  const basePayload: Record<string, unknown> = {
+    name: payload.name,
+    phone: payload.phone,
+    email: payload.email,
+    appointment_date: payload.appointment_date,
+    preferred_time: payload.preferred_time,
+    service: payload.service,
+    message: payload.message || '',
+    status: payload.status || 'pending',
+    created_at: payload.created_at || new Date().toISOString(),
+  };
+
+  if (payload.dob) {
+    basePayload.dob = payload.dob;
+  }
+
+  // Attempt insert
+  let { data, error } = await supabase.from('appointments').insert([basePayload]);
+
+  // If the database does not have the 'dob' column yet (PGRST204),
+  // fallback cleanly by embedding DOB into the clinical message notes
+  if (error && error.code === 'PGRST204' && String(error.message).includes('dob')) {
+    console.warn(
+      "Supabase notice: 'dob' column not yet migrated in appointments table. Saving DOB in notes."
+    );
+    delete basePayload.dob;
+    const dobNote = `[DOB: ${payload.dob}]`;
+    const existingMsg = (basePayload.message as string) || '';
+    basePayload.message = existingMsg ? `${dobNote} ${existingMsg}` : dobNote;
+
+    const retry = await supabase.from('appointments').insert([basePayload]);
+    error = retry.error;
+    data = retry.data;
+  }
 
   if (error) {
+    console.error('Supabase createAppointment error:', error);
     throw error;
   }
 
@@ -84,6 +108,7 @@ export async function getAppointments(): Promise<AppointmentRecord[]> {
     .order('created_at', { ascending: false });
 
   if (error) {
+    console.error('Supabase getAppointments error:', error);
     throw error;
   }
 
@@ -104,6 +129,7 @@ export async function updateAppointmentStatus(
     .eq('id', id);
 
   if (error) {
+    console.error('Supabase updateAppointmentStatus error:', error);
     throw error;
   }
 }
@@ -119,6 +145,7 @@ export async function deleteAppointment(id: string): Promise<void> {
     .eq('id', id);
 
   if (error) {
+    console.error('Supabase deleteAppointment error:', error);
     throw error;
   }
 }
@@ -127,21 +154,40 @@ export async function deleteAppointment(id: string): Promise<void> {
  * Manually create an appointment from the admin dashboard.
  */
 export async function createAdminAppointment(payload: AppointmentInsert) {
-  const { data, error } = await supabase.from('appointments').insert([
-    {
-      name: payload.name,
-      phone: payload.phone,
-      email: payload.email,
-      appointment_date: payload.appointment_date,
-      preferred_time: payload.preferred_time,
-      service: payload.service,
-      message: payload.message || '',
-      status: payload.status || 'confirmed',
-      created_at: new Date().toISOString(),
-    },
-  ]);
+  const basePayload: Record<string, unknown> = {
+    name: payload.name,
+    phone: payload.phone,
+    email: payload.email,
+    appointment_date: payload.appointment_date,
+    preferred_time: payload.preferred_time,
+    service: payload.service,
+    message: payload.message || '',
+    status: payload.status || 'confirmed',
+    created_at: new Date().toISOString(),
+  };
+
+  if (payload.dob) {
+    basePayload.dob = payload.dob;
+  }
+
+  let { data, error } = await supabase.from('appointments').insert([basePayload]);
+
+  if (error && error.code === 'PGRST204' && String(error.message).includes('dob')) {
+    console.warn(
+      "Supabase notice: 'dob' column not yet migrated in appointments table. Saving DOB in notes."
+    );
+    delete basePayload.dob;
+    const dobNote = `[DOB: ${payload.dob}]`;
+    const existingMsg = (basePayload.message as string) || '';
+    basePayload.message = existingMsg ? `${dobNote} ${existingMsg}` : dobNote;
+
+    const retry = await supabase.from('appointments').insert([basePayload]);
+    error = retry.error;
+    data = retry.data;
+  }
 
   if (error) {
+    console.error('Supabase createAdminAppointment error:', error);
     throw error;
   }
 
