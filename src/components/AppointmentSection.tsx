@@ -1,6 +1,6 @@
 import React, { useState, useEffect, forwardRef } from 'react';
-import { CheckCircle2, AlertCircle, ArrowRight, Send, Loader2 } from 'lucide-react';
-import { createAppointment } from '../lib/supabase';
+import { CheckCircle2, AlertCircle, ArrowRight, Send, Loader2, Phone, CalendarX, MessageSquare } from 'lucide-react';
+import { createAppointment, getPublicBookingStatus } from '../lib/supabase';
 
 interface AppointmentSectionProps {
   initialTreatment?: string;
@@ -23,6 +23,20 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [submittedDetails, setSubmittedDetails] = useState<typeof formData | null>(null);
+    const [isBookingOpen, setIsBookingOpen] = useState<boolean>(true);
+
+    // Check public booking status on mount
+    useEffect(() => {
+      let isMounted = true;
+      getPublicBookingStatus().then((status) => {
+        if (isMounted) {
+          setIsBookingOpen(status);
+        }
+      });
+      return () => {
+        isMounted = false;
+      };
+    }, []);
 
     // Synchronize selected treatment if user triggers it from other sections
     useEffect(() => {
@@ -168,7 +182,136 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
               boxShadow: 'var(--shadow-float)',
             }}
           >
-            {isSubmitted ? (
+            {!isBookingOpen ? (
+              /* Public Booking Closed State */
+              <div
+                style={{
+                  textAlign: 'center',
+                  padding: '36px 16px',
+                  animation: 'fadeIn 0.4s ease-out',
+                }}
+              >
+                <div
+                  style={{
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 24px auto',
+                  }}
+                >
+                  <CalendarX size={32} color="#dc2626" />
+                </div>
+
+                <div
+                  style={{
+                    display: 'inline-block',
+                    padding: '4px 14px',
+                    borderRadius: '9999px',
+                    backgroundColor: '#fee2e2',
+                    color: '#991b1b',
+                    fontSize: '0.8125rem',
+                    fontWeight: 600,
+                    marginBottom: '16px',
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  Online Booking Temporarily Closed
+                </div>
+
+                <h3
+                  style={{
+                    fontSize: '1.625rem',
+                    fontWeight: 700,
+                    letterSpacing: '-0.02em',
+                    color: '#1d1d1f',
+                    marginBottom: '14px',
+                  }}
+                >
+                  Online appointments are currently unavailable. Please contact the clinic directly.
+                </h3>
+
+                <p
+                  style={{
+                    fontSize: '1rem',
+                    color: 'var(--text-secondary)',
+                    maxWidth: '560px',
+                    margin: '0 auto 32px auto',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Our online appointment scheduling desk is temporarily paused. For consultations, inquiries, or dental emergencies, please reach our hospital team directly via telephone or WhatsApp.
+                </p>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '16px',
+                    flexWrap: 'wrap',
+                    marginBottom: '32px',
+                  }}
+                >
+                  <a
+                    href="tel:+918309864006"
+                    className="btn btn-primary"
+                    style={{
+                      padding: '14px 28px',
+                      fontSize: '0.9375rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <Phone size={16} />
+                    <span>Call +91 83098 64006</span>
+                  </a>
+
+                  <a
+                    href="https://wa.me/918309864006"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-secondary"
+                    style={{
+                      padding: '14px 24px',
+                      fontSize: '0.9375rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    <MessageSquare size={16} color="#25D366" />
+                    <span>WhatsApp Clinic</span>
+                  </a>
+                </div>
+
+                <div
+                  style={{
+                    maxWidth: '460px',
+                    margin: '0 auto',
+                    padding: '16px 20px',
+                    borderRadius: '14px',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid rgba(0, 0, 0, 0.06)',
+                    fontSize: '0.8125rem',
+                    color: 'var(--text-secondary)',
+                    textAlign: 'left',
+                  }}
+                >
+                  <div style={{ fontWeight: 600, color: '#1d1d1f', marginBottom: '4px' }}>
+                    Walk-in & Direct Desk Hours:
+                  </div>
+                  <div>Monday – Saturday: 10:00 AM – 8:00 PM</div>
+                  <div>Sunday: 10:30 AM – 2:00 PM</div>
+                  <div style={{ marginTop: '6px', color: 'var(--text-muted)' }}>
+                    Location: Azam Pura, Siddipet, Telangana 502103
+                  </div>
+                </div>
+              </div>
+            ) : isSubmitted ? (
               /* Submission Success State */
               <div
                 style={{

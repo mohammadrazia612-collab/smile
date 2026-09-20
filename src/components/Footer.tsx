@@ -1,7 +1,9 @@
 import React from 'react';
 import { ArrowUp } from 'lucide-react';
+import { useRouter } from '../router/Router';
 
 export const Footer: React.FC = () => {
+  const { navigate } = useRouter();
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -136,10 +138,34 @@ export const Footer: React.FC = () => {
               © {new Date().getFullYear()} Shiva Smile Dental Care Hospital. All rights reserved. Azam Pura, Siddipet, Telangana 502103.
             </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
             <a href="#" style={{ color: 'var(--text-muted)' }}>Privacy Policy</a>
             <a href="#" style={{ color: 'var(--text-muted)' }}>Terms of Service</a>
             <a href="#" style={{ color: 'var(--text-muted)' }}>Medical Disclaimer</a>
+            <a
+              href="/admin/login"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/admin/login');
+              }}
+              style={{
+                color: 'var(--text-muted)',
+                opacity: 0.65,
+                transition: 'opacity 0.2s ease, color 0.2s ease',
+                textDecoration: 'none',
+                cursor: 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.opacity = '1';
+                e.currentTarget.style.color = 'var(--text-primary)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.opacity = '0.65';
+                e.currentTarget.style.color = 'var(--text-muted)';
+              }}
+            >
+              Admin Login
+            </a>
 
             <button
               onClick={scrollToTop}
