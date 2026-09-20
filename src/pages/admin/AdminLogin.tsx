@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Mail, AlertCircle, ArrowLeft, Loader2, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, AlertCircle, ArrowLeft, Loader2, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { signInAdmin, getAdminUser } from '../../lib/supabase';
 import { useRouter } from '../../router/Router';
 
@@ -7,6 +7,7 @@ export const AdminLogin: React.FC = () => {
   const { navigate } = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -43,11 +44,23 @@ export const AdminLogin: React.FC = () => {
       navigate('/admin');
     } catch (err: unknown) {
       console.error('Login error:', err);
-      const msg =
+      const rawMsg =
         err && typeof err === 'object' && 'message' in err
           ? String((err as { message: unknown }).message)
-          : 'Invalid administrator credentials. Please check your email and password.';
-      setError(msg);
+          : '';
+
+      const lower = rawMsg.toLowerCase();
+      if (lower.includes('email not confirmed')) {
+        setError(
+          'Your admin account email is not confirmed yet. Run "UPDATE auth.users SET email_confirmed_at = now();" in your Supabase SQL Editor, or turn off "Confirm email" in Supabase Auth settings.'
+        );
+      } else if (lower.includes('invalid login credentials')) {
+        setError(
+          'Invalid login credentials. Make sure you have created this account in your Supabase Dashboard (Authentication -> Users) with "Auto Confirm" enabled.'
+        );
+      } else {
+        setError(rawMsg || 'Invalid administrator credentials. Please check your email and password.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -166,20 +179,27 @@ export const AdminLogin: React.FC = () => {
             role="alert"
             style={{
               marginBottom: '20px',
-              padding: '12px 16px',
+              padding: '14px 16px',
               borderRadius: '12px',
               backgroundColor: '#fef2f2',
               border: '1px solid #fecaca',
               color: '#991b1b',
               fontSize: '0.8125rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              lineHeight: 1.4,
+              lineHeight: 1.45,
             }}
           >
-            <AlertCircle size={18} color="#dc2626" style={{ flexShrink: 0 }} />
-            <span>{error}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', fontWeight: 600 }}>
+              <AlertCircle size={16} color="#dc2626" style={{ flexShrink: 0 }} />
+              <span>{error}</span>
+            </div>
+            {error.toLowerCase().includes('invalid') && (
+              <div style={{ fontSize: '0.75rem', color: '#7f1d1d', marginTop: '6px', paddingLeft: '24px' }}>
+                <ul style={{ margin: 0, paddingLeft: '14px', lineHeight: 1.5 }}>
+                  <li>Check for typos (e.g. number <strong>00</strong> vs letter <strong>oo</strong>).</li>
+                  <li>Ensure user is created in <a href="https://supabase.com/dashboard/project/rniyxelqdwfdogsnosgu/auth/users" target="_blank" rel="noreferrer" style={{ color: '#991b1b', fontWeight: 600, textDecoration: 'underline' }}>Supabase Auth</a> with <strong>Auto Confirm</strong> ON.</li>
+                </ul>
+              </div>
+            )}
           </div>
         )}
 
@@ -216,7 +236,7 @@ export const AdminLogin: React.FC = () => {
                 type="email"
                 autoComplete="email"
                 required
-                placeholder="admin@shivasmile.com"
+                placeholder="affkhan63007@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{
@@ -263,7 +283,7 @@ export const AdminLogin: React.FC = () => {
               </div>
               <input
                 id="admin-password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 required
                 placeholder="••••••••••••"
@@ -271,7 +291,7 @@ export const AdminLogin: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '12px 14px 12px 40px',
+                  padding: '12px 42px 12px 40px',
                   borderRadius: '12px',
                   border: '1px solid rgba(0, 0, 0, 0.12)',
                   fontSize: '0.9375rem',
@@ -281,6 +301,27 @@ export const AdminLogin: React.FC = () => {
                   boxSizing: 'border-box',
                 }}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  padding: '4px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </div>
           </div>
 
