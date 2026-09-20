@@ -229,6 +229,9 @@ export const InteractiveCluster: React.FC = () => {
               letterSpacing: '0.02em',
               pointerEvents: 'none',
               boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)',
+              maxWidth: 'calc(100% - 32px)',
+              textAlign: 'center',
+              boxSizing: 'border-box',
             }}
           >
             Move cursor to experience inertia • Tap or click any element for specifications

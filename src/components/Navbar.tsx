@@ -68,6 +68,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
               gap: '10px',
               textDecoration: 'none',
               color: 'var(--text-primary)',
+              flexShrink: 0,
             }}
           >
             <div
@@ -79,6 +80,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                flexShrink: 0,
               }}
             >
               <svg width="17" height="17" viewBox="0 0 40 40" fill="none">
@@ -97,15 +99,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
               </svg>
             </div>
             <span
+              className="nav-brand-text"
               style={{
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 800,
                 fontSize: '0.9375rem',
                 letterSpacing: '-0.02em',
                 color: '#1d1d1f',
+                lineHeight: 1.15,
+                whiteSpace: 'nowrap',
               }}
             >
-              SHIVA SMILE <span style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>DENTAL CARE</span>
+              <span className="brand-wordmark-main">SHIVA SMILE</span>{' '}
+              <span className="brand-wordmark-sub" style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>DENTAL CARE</span>
             </span>
           </a>
 
@@ -250,6 +256,19 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
           }
           .mobile-menu-toggle {
             display: flex !important;
+          }
+        }
+        @media (max-width: 480px) {
+          .nav-brand-text {
+            display: flex !important;
+            flex-direction: column !important;
+            font-size: 0.8125rem !important;
+            line-height: 1.1 !important;
+            white-space: normal !important;
+          }
+          .brand-wordmark-sub {
+            font-size: 0.6875rem !important;
+            letter-spacing: 0.02em !important;
           }
         }
         @keyframes fadeIn {

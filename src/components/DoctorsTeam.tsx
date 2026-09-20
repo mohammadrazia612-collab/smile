@@ -72,9 +72,10 @@ export const DoctorsTeam: React.FC<DoctorsTeamProps> = ({ onBookConsultation }) 
 
         {/* 3 Doctor Profile Cards */}
         <div
+          className="doctors-team-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
             gap: '32px',
           }}
         >

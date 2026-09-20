@@ -67,7 +67,7 @@ export const PublicWebsite: React.FC = () => {
       <Navbar onBookClick={scrollToAppointment} />
 
       {/* Main Content Flow */}
-      <main style={{ flex: 1 }}>
+      <main className="main-content" style={{ flex: 1 }}>
         {/* 1. Cinematic Hero with modular Spline 3D slot */}
         <Hero
           onBookClick={scrollToAppointment}

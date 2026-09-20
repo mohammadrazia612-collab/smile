@@ -113,9 +113,10 @@ export const QuickServices: React.FC<QuickServicesProps> = ({ onSelectService })
 
         {/* 6 Compact Interactive Service Pills */}
         <div
+          className="quick-services-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
             gap: '16px',
           }}
         >

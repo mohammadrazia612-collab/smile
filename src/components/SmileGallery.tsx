@@ -503,9 +503,10 @@ export const SmileGallery: React.FC = () => {
 
         {/* 4 Clinical Cases Responsive Grid */}
         <div
+          className="smile-gallery-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
             gap: '32px',
           }}
         >
@@ -530,6 +531,9 @@ export const SmileGallery: React.FC = () => {
           <div
             style={{
               display: 'inline-flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              maxWidth: '100%',
               alignItems: 'center',
               gap: '6px',
               fontSize: '0.8125rem',

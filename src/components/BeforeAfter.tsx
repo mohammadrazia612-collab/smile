@@ -112,6 +112,7 @@ export const BeforeAfter: React.FC = () => {
             />
             {/* After Tag */}
             <div
+              className="before-after-tag before-after-tag-right"
               style={{
                 position: 'absolute',
                 top: '20px',
@@ -165,6 +166,7 @@ export const BeforeAfter: React.FC = () => {
             />
             {/* Before Tag */}
             <div
+              className="before-after-tag before-after-tag-left"
               style={{
                 position: 'absolute',
                 top: '20px',
@@ -239,6 +241,10 @@ export const BeforeAfter: React.FC = () => {
           <div
             style={{
               display: 'inline-flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              maxWidth: '100%',
+              boxSizing: 'border-box',
               alignItems: 'center',
               gap: '8px',
               padding: '8px 18px',
