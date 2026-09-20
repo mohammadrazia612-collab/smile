@@ -51,18 +51,6 @@ const CLINICAL_CASES: ClinicalCase[] = [
     visits: '5 Sessions',
     description: 'Orthodontic correction of deep anterior crowding and tooth rotation without wires or brackets, finalized with biological enamel micro-polishing.',
   },
-  {
-    id: 'case-4',
-    title: 'Laser Enamel Whitening Treatment',
-    category: 'whitening',
-    categoryLabel: 'Laser Whitening',
-    beforeImage: '/assets/images/clinical-cases/case4-before.jpg',
-    afterImage: '/assets/images/clinical-cases/case4-after.jpg',
-    shade: 'Lifted 7 Vita Enamel Shades',
-    duration: '60 Minutes',
-    visits: '1 Session',
-    description: 'Non-dehydrating dual-wavelength laser whitening removing deep intrinsic tannin and age stains with zero sensitivity while preserving natural enamel luster.',
-  },
 ];
 
 interface CaseSliderProps {
@@ -469,11 +457,10 @@ export const SmileGallery: React.FC = () => {
           }}
         >
           {[
-            { label: 'All Cases (4)', value: 'all' },
+            { label: 'All Cases (3)', value: 'all' },
             { label: 'Porcelain Veneers', value: 'veneers' },
             { label: 'Aesthetic Restorations', value: 'restoration' },
             { label: 'Clear Aligners', value: 'aligners' },
-            { label: 'Laser Whitening', value: 'whitening' },
           ].map((tab) => {
             const isActive = activeFilter === tab.value;
             return (
@@ -501,12 +488,12 @@ export const SmileGallery: React.FC = () => {
           })}
         </div>
 
-        {/* 4 Clinical Cases Responsive Grid */}
+        {/* 3 Clinical Cases Responsive Grid */}
         <div
           className="smile-gallery-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 320px), 1fr))',
             gap: '32px',
           }}
         >
