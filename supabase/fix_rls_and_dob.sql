@@ -58,3 +58,28 @@ FOR ALL
 TO authenticated
 USING (true)
 WITH CHECK (true);
+
+-- 6. Enable Realtime Replication & Publication for Instant Admin Sync
+ALTER TABLE public.appointments REPLICA IDENTITY FULL;
+ALTER TABLE public.clinic_settings REPLICA IDENTITY FULL;
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' 
+    AND schemaname = 'public' 
+    AND tablename = 'appointments'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.appointments;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' 
+    AND schemaname = 'public' 
+    AND tablename = 'clinic_settings'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.clinic_settings;
+  END IF;
+END $$;

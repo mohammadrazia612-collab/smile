@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Lock, Mail, AlertCircle, ArrowLeft, Loader2, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, AlertCircle, ArrowLeft, Loader2, Eye, EyeOff } from 'lucide-react';
 import { signInAdmin, getAdminUser } from '../../lib/supabase';
 import { useRouter } from '../../router/Router';
 
@@ -150,17 +150,22 @@ export const AdminLogin: React.FC = () => {
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div
             style={{
-              width: '56px',
-              height: '56px',
-              borderRadius: '16px',
-              backgroundColor: 'rgba(0, 113, 227, 0.08)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              margin: '0 auto 16px auto',
+              margin: '0 auto 18px auto',
             }}
           >
-            <ShieldCheck size={28} color="var(--accent-primary)" />
+            <img
+              src="/logo.png"
+              alt="Shiva Smile Dental Care Hospital Logo"
+              style={{
+                width: '76px',
+                height: '76px',
+                objectFit: 'contain',
+                display: 'block',
+              }}
+            />
           </div>
 
           <h1

@@ -30,33 +30,18 @@ export const Footer: React.FC = () => {
         >
             {/* Brand Col */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-                <div
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
+                <img
+                  src="/logo.png"
+                  alt="Shiva Smile Dental Care Hospital Logo"
                   style={{
-                    width: 26,
-                    height: 26,
-                    borderRadius: '6px',
-                    backgroundColor: 'rgba(0, 113, 227, 0.08)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    width: '54px',
+                    height: '54px',
+                    objectFit: 'contain',
+                    flexShrink: 0,
+                    display: 'block',
                   }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 40 40" fill="none">
-                    <path
-                      d="M20 5C14 5 10 9.5 10 17C10 23 12 30 16 35C17.2 36.5 18.8 35.5 19.2 33.5L20 28L20.8 33.5C21.2 35.5 22.8 36.5 24 35C28 30 30 23 30 17C30 9.5 26 5 20 5Z"
-                      stroke="#1D1D1F"
-                      strokeWidth="2.5"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M15 16C17 19 23 19 25 16"
-                      stroke="#0071E3"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                </div>
+                />
                 <span style={{ fontWeight: 700, fontSize: '0.9375rem', color: '#1d1d1f' }}>
                   SHIVA SMILE <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>DENTAL CARE HOSPITAL</span>
                 </span>

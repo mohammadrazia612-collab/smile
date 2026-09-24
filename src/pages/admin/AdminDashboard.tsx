@@ -19,7 +19,6 @@ import {
   Mail,
   X,
   ExternalLink,
-  ShieldCheck,
   Loader2,
   ArrowUpDown,
 } from 'lucide-react';
@@ -35,6 +34,9 @@ import {
   setPublicBookingStatus,
   getAdminUser,
   signOutAdmin,
+  subscribeToAppointmentsRealtime,
+  subscribeToClinicSettingsRealtime,
+  onAppointmentSyncEvent,
 } from '../../lib/supabase';
 import { useRouter } from '../../router/Router';
 
@@ -101,8 +103,8 @@ export const AdminDashboard: React.FC = () => {
   }, [navigate]);
 
   // 2. Fetch Appointments & Settings
-  const fetchData = useCallback(async () => {
-    setIsLoading(true);
+  const fetchData = useCallback(async (isSilent = false) => {
+    if (!isSilent) setIsLoading(true);
     setActionError(null);
     try {
       const [bookings, bookingOpen] = await Promise.all([
@@ -119,7 +121,7 @@ export const AdminDashboard: React.FC = () => {
           : 'Failed to load appointments from database.';
       setActionError(msg);
     } finally {
-      setIsLoading(false);
+      if (!isSilent) setIsLoading(false);
     }
   }, []);
 
@@ -127,6 +129,75 @@ export const AdminDashboard: React.FC = () => {
     if (!isCheckingAuth) {
       fetchData();
     }
+  }, [isCheckingAuth, fetchData]);
+
+  // 3. Realtime Supabase Subscription, Polling, Tab Focus & Cross-Tab Sync
+  useEffect(() => {
+    if (isCheckingAuth) return;
+
+    // A. Supabase Realtime Subscription for Postgres INSERT/UPDATE/DELETE events
+    const unsubscribeRealtime = subscribeToAppointmentsRealtime({
+      onInsert: (newRecord) => {
+        setAppointments((prev) => {
+          if (prev.some((a) => a.id === newRecord.id)) return prev;
+          return [newRecord, ...prev];
+        });
+        setActionSuccess(`New appointment received from ${newRecord.name || 'patient'}!`);
+        fetchData(true);
+      },
+      onUpdate: (updatedRecord) => {
+        setAppointments((prev) =>
+          prev.map((a) => (a.id === updatedRecord.id ? updatedRecord : a))
+        );
+        setSelectedAppointment((prev) =>
+          prev?.id === updatedRecord.id ? updatedRecord : prev
+        );
+        fetchData(true);
+      },
+      onDelete: (deletedId) => {
+        setAppointments((prev) => prev.filter((a) => a.id !== deletedId));
+        setSelectedAppointment((prev) => (prev?.id === deletedId ? null : prev));
+        fetchData(true);
+      },
+    });
+
+    // B. Supabase Realtime for Clinic Settings (booking toggle)
+    const unsubscribeSettings = subscribeToClinicSettingsRealtime((isOpen) => {
+      setIsBookingOpen(isOpen);
+    });
+
+    // C. Cross-Tab Synchronization (dispatched when appointment is created on website in same browser)
+    const unsubscribeSync = onAppointmentSyncEvent(() => {
+      fetchData(true);
+    });
+
+    // D. Window Focus & Page Visibility Refetch
+    const handleFocus = () => {
+      fetchData(true);
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        fetchData(true);
+      }
+    };
+    window.addEventListener('focus', handleFocus);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // E. Periodic Polling Interval (every 12 seconds when tab is active)
+    const pollInterval = setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchData(true);
+      }
+    }, 12000);
+
+    return () => {
+      unsubscribeRealtime();
+      unsubscribeSettings();
+      unsubscribeSync();
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      clearInterval(pollInterval);
+    };
   }, [isCheckingAuth, fetchData]);
 
   // 3. Clear temporary action notifications
@@ -284,18 +355,18 @@ export const AdminDashboard: React.FC = () => {
         // Search query
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
-          const matchName = app.name.toLowerCase().includes(q);
-          const matchPhone = app.phone.toLowerCase().includes(q);
-          const matchEmail = app.email.toLowerCase().includes(q);
-          const matchService = app.service.toLowerCase().includes(q);
+          const matchName = (app.name || '').toLowerCase().includes(q);
+          const matchPhone = (app.phone || '').toLowerCase().includes(q);
+          const matchEmail = (app.email || '').toLowerCase().includes(q);
+          const matchService = (app.service || '').toLowerCase().includes(q);
           const matchNotes = (app.message || '').toLowerCase().includes(q);
           return matchName || matchPhone || matchEmail || matchService || matchNotes;
         }
         return true;
       })
       .sort((a, b) => {
-        const timeA = new Date(a.created_at).getTime();
-        const timeB = new Date(b.created_at).getTime();
+        const timeA = new Date(a.created_at).getTime() || 0;
+        const timeB = new Date(b.created_at).getTime() || 0;
         return sortOrder === 'newest' ? timeB - timeA : timeA - timeB;
       });
   }, [appointments, statusFilter, dateFilter, searchQuery, sortOrder]);
@@ -369,19 +440,17 @@ export const AdminDashboard: React.FC = () => {
         >
           {/* Logo & Portal Title */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <div
+            <img
+              src="/logo.png"
+              alt="Shiva Smile Dental Care Hospital Logo"
               style={{
-                width: 34,
-                height: 34,
-                borderRadius: '8px',
-                backgroundColor: 'rgba(0, 113, 227, 0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                width: '46px',
+                height: '46px',
+                objectFit: 'contain',
+                display: 'block',
+                flexShrink: 0,
               }}
-            >
-              <ShieldCheck size={20} color="var(--accent-primary)" />
-            </div>
+            />
             <div>
               <div style={{ fontWeight: 800, fontSize: '0.9375rem', letterSpacing: '-0.01em' }}>
                 SHIVA SMILE <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>ADMIN</span>
@@ -790,7 +859,7 @@ export const AdminDashboard: React.FC = () => {
           {/* Right Action: Refresh & Create Appointment Button */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <button
-              onClick={fetchData}
+              onClick={() => fetchData(false)}
               title="Refresh Bookings"
               style={{
                 width: 36,
@@ -930,7 +999,7 @@ export const AdminDashboard: React.FC = () => {
                   : 'Try adjusting your search query, status tab, or date filter.'}
               </div>
               <button
-                onClick={fetchData}
+                onClick={() => fetchData(false)}
                 className="btn btn-secondary"
                 style={{ padding: '6px 14px', fontSize: '0.75rem', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
               >

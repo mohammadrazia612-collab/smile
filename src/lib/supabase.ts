@@ -45,6 +45,175 @@ export interface ClinicSetting {
 }
 
 // ==============================================================================
+// Cross-Tab & Realtime Synchronization Helpers
+// ==============================================================================
+
+export type AppointmentChangeEvent = 'INSERT' | 'UPDATE' | 'DELETE';
+
+export interface AppointmentSyncMessage {
+  type: AppointmentChangeEvent;
+  record?: AppointmentRecord | { id: string };
+  timestamp: number;
+}
+
+let syncBroadcastChannel: BroadcastChannel | null = null;
+try {
+  if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+    syncBroadcastChannel = new BroadcastChannel('shiva_smile_appointments_sync');
+  }
+} catch (e) {
+  console.warn('BroadcastChannel initialization note:', e);
+}
+
+/**
+ * Broadcasts an appointment database change across all open tabs/windows of this browser.
+ */
+export function broadcastAppointmentChange(
+  type: AppointmentChangeEvent,
+  record?: AppointmentRecord | { id: string }
+) {
+  const message: AppointmentSyncMessage = {
+    type,
+    record,
+    timestamp: Date.now(),
+  };
+
+  try {
+    if (syncBroadcastChannel) {
+      syncBroadcastChannel.postMessage(message);
+    }
+  } catch (err) {
+    console.warn('Sync broadcast warning:', err);
+  }
+
+  // Fallback to localStorage event for older browsers or cross-context sync
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem('shiva_smile_last_sync_event', JSON.stringify(message));
+    }
+  } catch {
+    // Ignore storage quota errors
+  }
+}
+
+/**
+ * Listens for appointment changes dispatched from other tabs/windows of this browser.
+ */
+export function onAppointmentSyncEvent(callback: (msg: AppointmentSyncMessage) => void): () => void {
+  if (typeof window === 'undefined') return () => {};
+
+  const handleBroadcast = (event: MessageEvent<AppointmentSyncMessage>) => {
+    if (event && event.data && event.data.type) {
+      callback(event.data);
+    }
+  };
+
+  const handleStorage = (e: StorageEvent) => {
+    if (e.key === 'shiva_smile_last_sync_event' && e.newValue) {
+      try {
+        const parsed = JSON.parse(e.newValue) as AppointmentSyncMessage;
+        callback(parsed);
+      } catch {
+        callback({ type: 'UPDATE', timestamp: Date.now() });
+      }
+    }
+  };
+
+  if (syncBroadcastChannel) {
+    syncBroadcastChannel.addEventListener('message', handleBroadcast);
+  }
+  window.addEventListener('storage', handleStorage);
+
+  return () => {
+    if (syncBroadcastChannel) {
+      syncBroadcastChannel.removeEventListener('message', handleBroadcast);
+    }
+    window.removeEventListener('storage', handleStorage);
+  };
+}
+
+/**
+ * Subscribes to Supabase PostgreSQL Realtime changes on the public.appointments table.
+ * Listens directly for INSERT, UPDATE, and DELETE events from PostgreSQL replication.
+ */
+export function subscribeToAppointmentsRealtime(handlers: {
+  onInsert?: (row: AppointmentRecord) => void;
+  onUpdate?: (row: AppointmentRecord) => void;
+  onDelete?: (deletedId: string) => void;
+  onChange?: () => void;
+}): () => void {
+  const channel = supabase
+    .channel('realtime:appointments')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'appointments',
+      },
+      (payload) => {
+        try {
+          if (payload.eventType === 'INSERT') {
+            const newRecord = payload.new as AppointmentRecord;
+            handlers.onInsert?.(newRecord);
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedRecord = payload.new as AppointmentRecord;
+            handlers.onUpdate?.(updatedRecord);
+          } else if (payload.eventType === 'DELETE') {
+            const oldRecord = payload.old as { id?: string };
+            if (oldRecord?.id) {
+              handlers.onDelete?.(oldRecord.id);
+            }
+          }
+          handlers.onChange?.();
+        } catch (err) {
+          console.error('Error handling realtime appointment change:', err);
+        }
+      }
+    )
+    .subscribe((_status, err) => {
+      if (err) {
+        console.warn('Supabase Realtime appointments subscription notice:', err);
+      }
+    });
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}
+
+/**
+ * Subscribes to Supabase Realtime changes on public.clinic_settings.
+ */
+export function subscribeToClinicSettingsRealtime(onChange: (isOpen: boolean) => void): () => void {
+  const channel = supabase
+    .channel('realtime:clinic_settings')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'clinic_settings',
+      },
+      (payload) => {
+        try {
+          const rec = payload.new as ClinicSetting;
+          if (rec && rec.key === 'public_booking_enabled') {
+            onChange(rec.value === 'true');
+          }
+        } catch (err) {
+          console.error('Error handling realtime clinic_settings change:', err);
+        }
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}
+
+// ==============================================================================
 // Appointments Data Access
 // ==============================================================================
 
@@ -52,6 +221,7 @@ export interface ClinicSetting {
  * Inserts a new appointment record into Supabase.
  * Respects Row Level Security (public INSERT).
  * Gracefully preserves DOB even if column migration is still pending in database.
+ * Broadcasts sync events across tabs immediately.
  */
 export async function createAppointment(payload: AppointmentInsert) {
   const basePayload: Record<string, unknown> = {
@@ -70,8 +240,8 @@ export async function createAppointment(payload: AppointmentInsert) {
     basePayload.dob = payload.dob;
   }
 
-  // Attempt insert
-  let { data, error } = await supabase.from('appointments').insert([basePayload]);
+  // Attempt insert and request returned row for instant sync
+  let { data, error } = await supabase.from('appointments').insert([basePayload]).select();
 
   // If the database does not have the 'dob' column yet (PGRST204),
   // fallback cleanly by embedding DOB into the clinical message notes
@@ -84,7 +254,7 @@ export async function createAppointment(payload: AppointmentInsert) {
     const existingMsg = (basePayload.message as string) || '';
     basePayload.message = existingMsg ? `${dobNote} ${existingMsg}` : dobNote;
 
-    const retry = await supabase.from('appointments').insert([basePayload]);
+    const retry = await supabase.from('appointments').insert([basePayload]).select();
     error = retry.error;
     data = retry.data;
   }
@@ -93,6 +263,9 @@ export async function createAppointment(payload: AppointmentInsert) {
     console.error('Supabase createAppointment error:', error);
     throw error;
   }
+
+  const createdRow = data && data[0] ? (data[0] as AppointmentRecord) : (basePayload as unknown as AppointmentRecord);
+  broadcastAppointmentChange('INSERT', createdRow);
 
   return data;
 }
@@ -112,7 +285,19 @@ export async function getAppointments(): Promise<AppointmentRecord[]> {
     throw error;
   }
 
-  return (data as AppointmentRecord[]) || [];
+  const records = (data as AppointmentRecord[]) || [];
+
+  // Diagnostic helper if 0 rows returned
+  if (records.length === 0) {
+    const { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData?.session) {
+      console.warn(
+        '[Supabase RLS Notice] getAppointments returned 0 records because there is no active authenticated session. Supabase RLS restricts SELECT to authenticated staff.'
+      );
+    }
+  }
+
+  return records;
 }
 
 /**
@@ -123,15 +308,19 @@ export async function updateAppointmentStatus(
   id: string,
   status: AppointmentStatus
 ): Promise<void> {
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('appointments')
     .update({ status })
-    .eq('id', id);
+    .eq('id', id)
+    .select();
 
   if (error) {
     console.error('Supabase updateAppointmentStatus error:', error);
     throw error;
   }
+
+  const updatedRow = data && data[0] ? (data[0] as AppointmentRecord) : { id, status } as unknown as AppointmentRecord;
+  broadcastAppointmentChange('UPDATE', updatedRow);
 }
 
 /**
@@ -148,6 +337,8 @@ export async function deleteAppointment(id: string): Promise<void> {
     console.error('Supabase deleteAppointment error:', error);
     throw error;
   }
+
+  broadcastAppointmentChange('DELETE', { id });
 }
 
 /**
@@ -170,7 +361,7 @@ export async function createAdminAppointment(payload: AppointmentInsert) {
     basePayload.dob = payload.dob;
   }
 
-  let { data, error } = await supabase.from('appointments').insert([basePayload]);
+  let { data, error } = await supabase.from('appointments').insert([basePayload]).select();
 
   if (error && error.code === 'PGRST204' && String(error.message).includes('dob')) {
     console.warn(
@@ -181,7 +372,7 @@ export async function createAdminAppointment(payload: AppointmentInsert) {
     const existingMsg = (basePayload.message as string) || '';
     basePayload.message = existingMsg ? `${dobNote} ${existingMsg}` : dobNote;
 
-    const retry = await supabase.from('appointments').insert([basePayload]);
+    const retry = await supabase.from('appointments').insert([basePayload]).select();
     error = retry.error;
     data = retry.data;
   }
@@ -190,6 +381,9 @@ export async function createAdminAppointment(payload: AppointmentInsert) {
     console.error('Supabase createAdminAppointment error:', error);
     throw error;
   }
+
+  const createdRow = data && data[0] ? (data[0] as AppointmentRecord) : (basePayload as unknown as AppointmentRecord);
+  broadcastAppointmentChange('INSERT', createdRow);
 
   return data;
 }
