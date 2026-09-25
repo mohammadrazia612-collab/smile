@@ -17,15 +17,21 @@ interface StatMetric {
   accentColor: string;
 }
 
+type AnimationPhase = 'idle' | 'revealed' | 'counting' | 'settled';
+
 export const Statistics: React.FC = () => {
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const [phase, setPhase] = useState<AnimationPhase>('idle');
   const [counts, setCounts] = useState<{ [key: string]: number }>({
     rating: 0,
     reviews: 0,
     days: 0,
   });
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+
   const sectionRef = useRef<HTMLElement>(null);
+  const hasTriggeredRef = useRef(false);
+  const animFrameRef = useRef<number | null>(null);
+  const timersRef = useRef<number[]>([]);
 
   const metrics: StatMetric[] = [
     {
@@ -79,55 +85,139 @@ export const Statistics: React.FC = () => {
     },
   ];
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
-          runSmoothCount();
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
+  const triggerAnimationSequence = () => {
+    if (hasTriggeredRef.current) return;
+    hasTriggeredRef.current = true;
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    // Respect reduced-motion preferences if set by user system
+    const prefersReducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      setCounts({ rating: 49, reviews: 51, days: 7 });
+      setPhase('settled');
+      return;
     }
 
-    return () => observer.disconnect();
-  }, [hasAnimated]);
+    // Sequence 1: Statistics section and badge icons subtly reveal
+    setPhase('revealed');
 
-  const runSmoothCount = () => {
-    const duration = 1600; // 1.6s smooth Apple count
+    // Sequence 2: Numbers smoothly emerge from 0 and count upward
+    const countTimer = window.setTimeout(() => {
+      setPhase('counting');
+      runSmoothAppleCount();
+    }, 140);
+    timersRef.current.push(countTimer);
+  };
+
+  const runSmoothAppleCount = () => {
+    // 1500ms duration for natural, measured, non-rushed Apple keynote cadence
+    const duration = 1500;
     const startTime = performance.now();
 
     const step = (now: number) => {
       const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+      const progress = Math.min(Math.max(elapsed / duration, 0), 1);
 
-      // Apple-grade quartic ease-out
-      const ease = 1 - Math.pow(1 - progress, 4);
+      // Smooth Apple-grade ease-out (exponent 2.3):
+      // Steady organic acceleration from 0 -> natural decelerating settle (0 -> 10 -> 25 -> 50 -> 100 curve)
+      const ease = 1 - Math.pow(1 - progress, 2.3);
 
       setCounts({
-        rating: Math.round(49 * ease),
-        reviews: Math.round(51 * ease),
-        days: Math.round(7 * ease),
+        rating: Math.min(49, Math.round(49 * ease)),
+        reviews: Math.min(51, Math.round(51 * ease)),
+        days: Math.min(7, Math.round(7 * ease)),
       });
 
       if (progress < 1) {
-        requestAnimationFrame(step);
+        animFrameRef.current = requestAnimationFrame(step);
       } else {
+        // Clean final settling
         setCounts({
           rating: 49,
           reviews: 51,
           days: 7,
         });
+        setPhase('settled');
       }
     };
 
-    requestAnimationFrame(step);
+    animFrameRef.current = requestAnimationFrame(step);
   };
+
+  useEffect(() => {
+    if (hasTriggeredRef.current) return;
+
+    const checkIsInViewport = () => {
+      if (hasTriggeredRef.current || !sectionRef.current) return false;
+      const rect = sectionRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+      // Meaningfully visible check:
+      // Top has reached within 92% of the viewport and element has not passed completely
+      const isVisible = rect.top < windowHeight * 0.92 && rect.bottom > 40;
+      if (isVisible) {
+        triggerAnimationSequence();
+        return true;
+      }
+      return false;
+    };
+
+    // 1. Initial page load check: if statistics are part of the opening viewport/initial screen, trigger immediately
+    const initialTimer = window.setTimeout(() => {
+      checkIsInViewport();
+    }, 60);
+    timersRef.current.push(initialTimer);
+
+    // 2. High-performance IntersectionObserver for scroll trigger
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if ((entry.isIntersecting || entry.intersectionRatio >= 0.08) && !hasTriggeredRef.current) {
+            triggerAnimationSequence();
+            if (observer) observer.disconnect();
+          }
+        },
+        {
+          threshold: [0.08, 0.18, 0.3],
+          rootMargin: '0px 0px -30px 0px',
+        }
+      );
+
+      if (sectionRef.current) {
+        observer.observe(sectionRef.current);
+      }
+    }
+
+    // 3. Passive scroll/resize fallback listener
+    const handleScrollOrResize = () => {
+      if (checkIsInViewport()) {
+        window.removeEventListener('scroll', handleScrollOrResize);
+        window.removeEventListener('resize', handleScrollOrResize);
+        if (observer) observer.disconnect();
+      }
+    };
+
+    window.addEventListener('scroll', handleScrollOrResize, { passive: true });
+    window.addEventListener('resize', handleScrollOrResize, { passive: true });
+
+    return () => {
+      if (observer) observer.disconnect();
+      window.removeEventListener('scroll', handleScrollOrResize);
+      window.removeEventListener('resize', handleScrollOrResize);
+      timersRef.current.forEach((t) => clearTimeout(t));
+      if (animFrameRef.current) {
+        cancelAnimationFrame(animFrameRef.current);
+      }
+    };
+  }, []);
+
+  const isRevealed = phase !== 'idle';
+  const isCountingOrSettled = phase === 'counting' || phase === 'settled';
 
   return (
     <section
@@ -140,6 +230,10 @@ export const Statistics: React.FC = () => {
         padding: 'clamp(56px, 7vw, 88px) 0',
         position: 'relative',
         zIndex: 5,
+        opacity: isRevealed ? 1 : 0,
+        transform: isRevealed ? 'translateY(0)' : 'translateY(18px)',
+        transition: 'opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1)',
+        willChange: 'opacity, transform',
       }}
     >
       <div className="container">
@@ -170,14 +264,21 @@ export const Statistics: React.FC = () => {
                   alignItems: 'center',
                   textAlign: 'center',
                   cursor: 'default',
-                  transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
-                  transform: isHovered ? 'translate3d(0, -4px, 0)' : 'translate3d(0, 0, 0)',
-                  opacity: hasAnimated ? 1 : 0,
-                  transitionDelay: `${index * 80}ms`,
+                  opacity: isRevealed ? 1 : 0,
+                  transform: isHovered
+                    ? 'translate3d(0, -4px, 0)'
+                    : isRevealed
+                    ? 'translate3d(0, 0, 0)'
+                    : 'translate3d(0, 16px, 0)',
+                  transition: phase === 'settled'
+                    ? 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                    : 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transitionDelay: phase === 'settled' ? '0ms' : `${index * 75}ms`,
+                  willChange: 'transform, opacity',
                 }}
                 className={`stat-ref-col ${isLast ? 'stat-ref-last' : ''}`}
               >
-                {/* Circular Pastel Badge Icon */}
+                {/* 1. Circular Pastel Badge Icon (reveals first with gentle scale) */}
                 <div
                   style={{
                     width: '60px',
@@ -189,15 +290,23 @@ export const Statistics: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginBottom: '22px',
-                    transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease',
-                    transform: isHovered ? 'scale(1.08)' : 'scale(1)',
+                    opacity: isRevealed ? 1 : 0,
+                    transform: isHovered
+                      ? 'scale(1.08)'
+                      : isRevealed
+                      ? 'scale(1) translateY(0)'
+                      : 'scale(0.85) translateY(8px)',
                     boxShadow: isHovered ? `0 8px 20px ${item.iconBg}` : 'none',
+                    transition: phase === 'settled'
+                      ? 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease'
+                      : 'transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease',
+                    transitionDelay: phase === 'settled' ? '0ms' : `${index * 75 + 30}ms`,
                   }}
                 >
                   {item.icon}
                 </div>
 
-                {/* Main Metric Value */}
+                {/* 2. Main Metric Value (smoothly counts up from 0 to target value) */}
                 <div
                   style={{
                     display: 'flex',
@@ -206,6 +315,12 @@ export const Statistics: React.FC = () => {
                     gap: item.id === 'days' ? '6px' : '3px',
                     marginBottom: '8px',
                     lineHeight: 1,
+                    opacity: isCountingOrSettled ? 1 : 0,
+                    transform: isCountingOrSettled ? 'translateY(0)' : 'translateY(10px)',
+                    transition: phase === 'settled'
+                      ? 'none'
+                      : 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+                    transitionDelay: phase === 'settled' ? '0ms' : `${index * 50}ms`,
                   }}
                 >
                   <span
@@ -219,6 +334,7 @@ export const Statistics: React.FC = () => {
                       fontFamily: 'var(--font-sans)',
                       whiteSpace: 'nowrap',
                       fontVariantNumeric: 'tabular-nums',
+                      minWidth: item.type === 'number' ? '1ch' : 'auto',
                     }}
                   >
                     {item.type === 'number'
@@ -240,6 +356,10 @@ export const Statistics: React.FC = () => {
                         letterSpacing: '-0.02em',
                         color: item.suffixColor || '#4b5563',
                         marginLeft: item.id === 'days' ? '2px' : '1px',
+                        opacity: isCountingOrSettled ? 1 : 0,
+                        transition: phase === 'settled'
+                          ? 'none'
+                          : 'opacity 0.35s ease',
                       }}
                     >
                       {item.suffix}
@@ -247,7 +367,7 @@ export const Statistics: React.FC = () => {
                   )}
                 </div>
 
-                {/* Metric Label */}
+                {/* 3. Metric Label (subtly settles into place) */}
                 <div
                   style={{
                     fontSize: '1.0625rem',
@@ -255,12 +375,18 @@ export const Statistics: React.FC = () => {
                     color: '#374151',
                     marginBottom: '12px',
                     letterSpacing: '-0.01em',
+                    opacity: isCountingOrSettled ? 1 : 0,
+                    transform: isCountingOrSettled ? 'translateY(0)' : 'translateY(8px)',
+                    transition: phase === 'settled'
+                      ? 'none'
+                      : 'opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+                    transitionDelay: phase === 'settled' ? '0ms' : `${index * 75 + 140}ms`,
                   }}
                 >
                   {item.label}
                 </div>
 
-                {/* Colored Decorative Accent Line */}
+                {/* 4. Colored Decorative Accent Line */}
                 <div
                   style={{
                     width: isHovered ? '42px' : '30px',
@@ -268,11 +394,15 @@ export const Statistics: React.FC = () => {
                     borderRadius: '9999px',
                     backgroundColor: item.accentColor,
                     marginBottom: '14px',
-                    transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                    opacity: isCountingOrSettled ? 1 : 0,
+                    transform: isCountingOrSettled ? 'scaleX(1)' : 'scaleX(0.3)',
+                    transformOrigin: 'center',
+                    transition: 'width 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease, transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+                    transitionDelay: phase === 'settled' ? '0ms' : `${index * 75 + 180}ms`,
                   }}
                 />
 
-                {/* Subtext Description */}
+                {/* 5. Subtext Description */}
                 <p
                   style={{
                     fontSize: '0.875rem',
@@ -281,6 +411,12 @@ export const Statistics: React.FC = () => {
                     fontWeight: 400,
                     margin: 0,
                     maxWidth: '220px',
+                    opacity: isCountingOrSettled ? 1 : 0,
+                    transform: isCountingOrSettled ? 'translateY(0)' : 'translateY(6px)',
+                    transition: phase === 'settled'
+                      ? 'none'
+                      : 'opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1)',
+                    transitionDelay: phase === 'settled' ? '0ms' : `${index * 75 + 220}ms`,
                   }}
                 >
                   {item.description}
@@ -324,3 +460,4 @@ export const Statistics: React.FC = () => {
     </section>
   );
 };
+
