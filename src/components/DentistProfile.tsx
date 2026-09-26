@@ -34,7 +34,7 @@ export const DentistProfile: React.FC = () => {
           >
             <img
               src="/assets/images/doctor-portrait.jpg"
-              alt="Clinical Director — Shiva Smile Dental Care Hospital"
+              alt="Clinical Care — D Care Multi Speciality Dental Hospital"
               style={{
                 width: '100%',
                 height: '100%',
@@ -69,7 +69,7 @@ export const DentistProfile: React.FC = () => {
                   marginBottom: '4px',
                 }}
               >
-                Dental Surgeon &amp; Director
+                Multi Speciality Dental Hospital
               </div>
               <div
                 style={{
@@ -79,10 +79,10 @@ export const DentistProfile: React.FC = () => {
                   letterSpacing: '-0.02em',
                 }}
               >
-                [Doctor Name, BDS / MDS]
+                D Care Dental Hospital
               </div>
               <div style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)' }}>
-                Shiva Smile Dental Care Hospital • Siddipet
+                Siddipet – Medak Road • Siddipet
               </div>
             </div>
           </div>
@@ -111,7 +111,7 @@ export const DentistProfile: React.FC = () => {
                 marginBottom: '20px',
               }}
             >
-              Providing comprehensive dental healthcare at Shiva Smile Dental Care Hospital in Siddipet with a clear philosophy: patient comfort, clinical hygiene, and personalized dental treatments.
+              Providing comprehensive dental healthcare at D Care Multi Speciality Dental Hospital in Siddipet with a clear philosophy: patient comfort, clinical hygiene, and personalized dental treatments.
             </p>
 
             <p
@@ -122,7 +122,7 @@ export const DentistProfile: React.FC = () => {
                 marginBottom: '36px',
               }}
             >
-              Every smile is approached as a unique harmonic composition — balancing biological preservation with natural light reflection. No mass-produced teeth, no unnecessary tooth reduction, and never an impersonal clinical encounter.
+              Every smile is approached with individualized clinical assessment — balancing biological tooth preservation with functional harmony, patient comfort, and attentive care.
             </p>
 
             {/* Structured Credentials Grid */}
@@ -149,10 +149,10 @@ export const DentistProfile: React.FC = () => {
                 </div>
                 <div>
                   <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1d1d1f', marginBottom: '2px' }}>
-                    Doctor of Dental Surgery
+                    General Dental Treatment
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    Columbia University College of Dental Medicine
+                    Routine exams &amp; preventive care
                   </div>
                 </div>
               </div>
@@ -170,10 +170,10 @@ export const DentistProfile: React.FC = () => {
                 </div>
                 <div>
                   <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1d1d1f', marginBottom: '2px' }}>
-                    MS in Prosthodontics
+                    Braces / Orthodontics
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    Advanced Specialty Residency &amp; Biomechanics
+                    Corrective alignment &amp; bite balancing
                   </div>
                 </div>
               </div>
@@ -191,10 +191,10 @@ export const DentistProfile: React.FC = () => {
                 </div>
                 <div>
                   <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1d1d1f', marginBottom: '2px' }}>
-                    Microscopic Aesthetics
+                    Retainers
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    High-magnification minimally invasive protocols
+                    Custom fixed &amp; removable retention
                   </div>
                 </div>
               </div>
@@ -212,10 +212,10 @@ export const DentistProfile: React.FC = () => {
                 </div>
                 <div>
                   <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#1d1d1f', marginBottom: '2px' }}>
-                    Fellow, ICOI
+                    Broken Tooth Treatment
                   </div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    International Congress of Oral Implantologists
+                    Restorative repair for damaged teeth
                   </div>
                 </div>
               </div>

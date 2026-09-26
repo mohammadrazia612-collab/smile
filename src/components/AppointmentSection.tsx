@@ -14,8 +14,8 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
       email: '',
       dob: '',
       date: '',
-      time: 'Morning (10:00 AM – 01:00 PM)',
-      treatment: initialTreatment || 'General Dental Care & Consultation',
+      time: 'Morning (09:00 AM – 01:00 PM)',
+      treatment: initialTreatment || 'General Dental Treatment',
       message: '',
     });
 
@@ -140,8 +140,8 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
         email: '',
         dob: '',
         date: '',
-        time: 'Morning (10:00 AM – 01:00 PM)',
-        treatment: initialTreatment || 'General Dental Care & Consultation',
+        time: 'Morning (09:00 AM – 01:00 PM)',
+        treatment: initialTreatment || 'General Dental Treatment',
         message: '',
       });
       setErrors({});
@@ -186,7 +186,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
               </span>
             </h2>
             <p className="section-subtitle">
-              Take the first step toward healthy teeth and a confident smile. Request your appointment at Shiva Smile Dental Care Hospital below.
+              Take the first step toward healthy teeth and a confident smile. Request your appointment at D Care Multi Speciality Dental Hospital below.
             </p>
           </div>
 
@@ -276,7 +276,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                   }}
                 >
                   <a
-                    href="tel:+918309864006"
+                    href="tel:+919391884433"
                     className="btn btn-primary"
                     style={{
                       padding: '14px 28px',
@@ -287,11 +287,11 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                     }}
                   >
                     <Phone size={16} />
-                    <span>Call +91 83098 64006</span>
+                    <span>Call +91 93918 84433</span>
                   </a>
 
                   <a
-                    href="https://wa.me/918309864006"
+                    href="https://wa.me/919391884433"
                     target="_blank"
                     rel="noreferrer"
                     className="btn btn-secondary"
@@ -324,10 +324,10 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                   <div style={{ fontWeight: 600, color: '#1d1d1f', marginBottom: '4px' }}>
                     Walk-in & Direct Desk Hours:
                   </div>
-                  <div>Monday – Saturday: 10:00 AM – 8:00 PM</div>
-                  <div>Sunday: 10:30 AM – 2:00 PM</div>
+                  <div>Monday: 10:00 AM – 9:00 PM | Tuesday: 9:00 AM – 9:00 PM</div>
+                  <div>Wednesday – Saturday: 10:00 AM – 9:00 PM | Sunday: 9:00 AM – 5:00 PM</div>
                   <div style={{ marginTop: '6px', color: 'var(--text-muted)' }}>
-                    Location: Azam Pura, Siddipet, Telangana 502103
+                    Location: Siddipet – Medak Road, Beside Kotak Mahindra Bank, Siddipet, Telangana 502103
                   </div>
                 </div>
               </div>
@@ -464,8 +464,8 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                   </div>
                   <ul style={{ paddingLeft: '18px', lineHeight: 1.6, margin: 0, fontSize: '0.8125rem' }}>
                     <li>Our front desk will call you at <strong>{(submittedDetails || formData).phone}</strong> to confirm the exact chair time.</li>
-                    <li>Hospital Location: Azam Pura, Siddipet, Telangana 502103.</li>
-                    <li>Clinic Phone: +91 83098 64006 (Mon–Sat: 10am–8pm, Sun: 10:30am–2pm).</li>
+                    <li>Hospital Location: Siddipet – Medak Road, Beside Kotak Mahindra Bank, Near Prathiba Degree College, Siddipet, Telangana 502103.</li>
+                    <li>Clinic Phone: +91 93918 84433 (Mon–Sat: 9/10am–9pm, Sun: 9am–5pm).</li>
                   </ul>
                 </div>
 
@@ -547,7 +547,7 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                       id="phone"
                       type="tel"
                       disabled={isSubmitting}
-                      placeholder="+91 83098 64006"
+                      placeholder="+91 93918 84433"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       style={{
@@ -691,12 +691,10 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         outline: 'none',
                       }}
                     >
-                      <option value="General Dental Care & Consultation">General Dental Care &amp; Consultation</option>
-                      <option value="Cosmetic Dentistry & Smile Care">Cosmetic Dentistry &amp; Smile Care</option>
-                      <option value="Dental Implants Consultation">Dental Implants Consultation</option>
-                      <option value="Gum & Periodontal Care">Gum &amp; Periodontal Care</option>
-                      <option value="Pediatric Dentistry (Children)">Pediatric Dentistry (Children)</option>
-                      <option value="Emergency Dental Service">Emergency Dental Service</option>
+                      <option value="General Dental Treatment">General Dental Treatment</option>
+                      <option value="Braces / Orthodontic Treatment">Braces / Orthodontic Treatment</option>
+                      <option value="Retainers">Retainers</option>
+                      <option value="Broken Tooth Treatment">Broken Tooth Treatment</option>
                     </select>
                   </div>
 
@@ -769,9 +767,9 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                         outline: 'none',
                       }}
                     >
-                      <option value="Morning (10:00 AM – 01:00 PM)">Morning (10:00 AM – 01:00 PM)</option>
+                      <option value="Morning (09:00 AM – 01:00 PM)">Morning (09:00 AM – 01:00 PM)</option>
                       <option value="Afternoon (01:00 PM – 05:00 PM)">Afternoon (01:00 PM – 05:00 PM)</option>
-                      <option value="Evening (05:00 PM – 08:00 PM)">Evening (05:00 PM – 08:00 PM)</option>
+                      <option value="Evening (05:00 PM – 09:00 PM)">Evening (05:00 PM – 09:00 PM)</option>
                     </select>
                   </div>
                 </div>
@@ -842,10 +840,10 @@ export const AppointmentSection = forwardRef<HTMLElement, AppointmentSectionProp
                       <div style={{ fontSize: '0.8125rem', color: '#7f1d1d' }}>
                         For immediate assistance, please call our clinic desk directly at{' '}
                         <a
-                          href="tel:+918309864006"
+                          href="tel:+919391884433"
                           style={{ fontWeight: 600, color: '#991b1b', textDecoration: 'underline' }}
                         >
-                          +91 83098 64006
+                          +91 93918 84433
                         </a>.
                       </div>
                     </div>

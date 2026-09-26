@@ -40,7 +40,7 @@ export const PatientExperience: React.FC = () => {
           <span className="eyebrow">Patient Experience</span>
           <h2 className="section-title">Comfortable, reassuring care designed around your peace of mind.</h2>
           <p className="section-subtitle">
-            At Shiva Smile Dental Care Hospital, we prioritize patient comfort, clear communication, and gentle clinical attention so every visit feels calm and reassuring.
+            At D Care Multi Speciality Dental Hospital, we prioritize patient comfort, clear communication, and gentle clinical attention so every visit feels calm and reassuring.
           </p>
         </div>
 
@@ -60,7 +60,7 @@ export const PatientExperience: React.FC = () => {
         >
           <img
             src="/assets/images/clinic-operatory.jpg"
-            alt="Shiva Smile Dental Care Hospital — Modern Clinical Operatory in Siddipet"
+            alt="D Care Multi Speciality Dental Hospital — Modern Clinical Operatory in Siddipet"
             style={{
               width: '100%',
               height: '100%',

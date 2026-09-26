@@ -92,7 +92,7 @@ export const Technology: React.FC = () => {
             </span>
           </h2>
           <p className="section-subtitle">
-            Shiva Smile Dental Care Hospital combines modern dental operatory equipment, digital diagnostic imaging, and hospital-grade sterilization protocols in Siddipet.
+            D Care Multi Speciality Dental Hospital combines modern dental operatory equipment, clinical diagnostic tools, and hospital-grade sterilization protocols in Siddipet.
           </p>
         </div>
 
@@ -128,7 +128,7 @@ export const Technology: React.FC = () => {
             >
               <img
                 src="/assets/images/digital-scanner.jpg"
-                alt="Shiva Smile Dental Care Hospital — Modern Treatment Operatory"
+                alt="D Care Multi Speciality Dental Hospital — Modern Treatment Operatory"
                 style={{
                   width: '100%',
                   height: '100%',

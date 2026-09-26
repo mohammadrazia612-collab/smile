@@ -382,7 +382,7 @@ export const InteractiveCluster: React.FC = () => {
                     {activeNode.category}
                   </span>
                   <span style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
-                    Shiva Smile Clinical Specification
+                    D Care Clinical Specification
                   </span>
                 </div>
 

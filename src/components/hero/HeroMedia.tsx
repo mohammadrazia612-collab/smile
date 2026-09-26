@@ -52,7 +52,7 @@ export const HeroMedia: React.FC<HeroMediaProps> = ({ scrollY, imageMode = 'scul
         >
           <img
             src="/assets/images/hero-sculpture.jpg"
-            alt="Shiva Smile Dental Care Hospital — Modern Dental Care"
+            alt="D Care Multi Speciality Dental Hospital — Modern Dental Care"
             style={{
               width: '100%',
               height: '100%',
@@ -77,7 +77,7 @@ export const HeroMedia: React.FC<HeroMediaProps> = ({ scrollY, imageMode = 'scul
         >
           <img
             src="/assets/images/clinic-real-treatment.jpg"
-            alt="Shiva Smile Dental Care Hospital — Modern Treatment Suite, Siddipet"
+            alt="D Care Multi Speciality Dental Hospital — Modern Treatment Suite, Siddipet"
             style={{
               width: '100%',
               height: '100%',

@@ -19,34 +19,34 @@ interface DoctorsTeamProps {
 export const DoctorsTeam: React.FC<DoctorsTeamProps> = ({ onBookConsultation }) => {
   const doctors: DoctorMember[] = [
     {
-      id: 'specialist-general-cosmetic',
-      name: '[Doctor Name, BDS / MDS]',
-      role: 'Dental Surgeon & Clinical Director',
-      qualification: '[Dental Degree / University]',
-      specialization: 'General & Cosmetic Dentistry',
-      fellowship: '[State Dental Council Registration]',
+      id: 'specialist-general-care',
+      name: 'General Dental Care Team',
+      role: 'Department of General Dentistry',
+      qualification: 'Comprehensive Dental Examinations',
+      specialization: 'General Dental Treatment',
+      fellowship: 'Routine & Preventive Dental Care',
       image: '/assets/images/doctor-portrait.jpg',
-      bio: 'Dedicated to comprehensive dental care, aesthetic smile restoration, and patient-centered treatment at Shiva Smile Dental Care Hospital.',
+      bio: 'Dedicated to thorough examinations, cleanings, tooth health checkups, and patient-centered treatment at D Care Multi Speciality Dental Hospital.',
     },
     {
-      id: 'specialist-implants-periodontics',
-      name: '[Doctor Name, MDS]',
-      role: 'Dental Implants & Periodontist',
-      qualification: '[Specialist Degree in Periodontics / Implants]',
-      specialization: 'Dental Implants & Periodontal Care',
-      fellowship: '[Professional Dental Council Member]',
+      id: 'specialist-orthodontics',
+      name: 'Orthodontic & Braces Team',
+      role: 'Department of Orthodontics',
+      qualification: 'Teeth Alignment & Corrective Dentistry',
+      specialization: 'Braces / Orthodontic Treatment',
+      fellowship: 'Metal & Ceramic Braces Alignment',
       image: '/assets/images/doctor-portrait.jpg',
-      bio: 'Providing targeted clinical care for gum health, bone support, and advanced dental implant restoration in Siddipet.',
+      bio: 'Providing targeted orthodontic care for misaligned teeth, spacing, and bite correction for patients in Siddipet.',
     },
     {
-      id: 'specialist-pediatric-family',
-      name: '[Doctor Name, MDS]',
-      role: 'Pediatric & Family Dental Specialist',
-      qualification: '[Specialist Degree in Pediatric Dentistry]',
-      specialization: 'Pediatric Dentistry & Preventive Care',
-      fellowship: '[Pediatric Dental Care Association]',
+      id: 'specialist-restorative',
+      name: 'Restorative & Retainer Team',
+      role: 'Department of Restorative Care',
+      qualification: 'Tooth Repair & Post-Braces Stability',
+      specialization: 'Retainers & Broken Tooth Care',
+      fellowship: 'Tooth Restorations & Custom Retainers',
       image: '/assets/images/doctor-portrait.jpg',
-      bio: 'Specialized in child-friendly, gentle preventive care ensuring anxiety-free dental visits for children and families.',
+      bio: 'Specialized in assessing and repairing broken or damaged teeth and providing custom retainers to maintain aligned dental health.',
     },
   ];
 
@@ -196,7 +196,7 @@ export const DoctorsTeam: React.FC<DoctorsTeamProps> = ({ onBookConsultation }) 
                 </div>
 
                 <button
-                  onClick={() => onBookConsultation(doc.name)}
+                  onClick={() => onBookConsultation(doc.specialization)}
                   className="btn btn-outline btn-magnetic"
                   style={{
                     width: '100%',
@@ -207,7 +207,7 @@ export const DoctorsTeam: React.FC<DoctorsTeamProps> = ({ onBookConsultation }) 
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <Stethoscope size={14} />
-                    <span>Request Consult with {doc.name.split(',')[0]}</span>
+                    <span>Request Consult: {doc.name}</span>
                   </div>
                   <ArrowRight size={13} />
                 </button>

@@ -6,12 +6,12 @@ export const TrustBenefits: React.FC = () => {
     {
       icon: <Award size={22} color="var(--accent-primary)" />,
       title: '4.9 / 5 Google Rating',
-      description: '51 verified reviews reflecting patient satisfaction and dedicated dental care in Siddipet.',
+      description: '91 verified reviews reflecting patient satisfaction and dedicated dental care in Siddipet.',
     },
     {
       icon: <ShieldCheck size={22} color="var(--accent-primary)" />,
       title: 'Comprehensive Hospital Care',
-      description: 'General, cosmetic, dental implants, periodontal, pediatric, and emergency dental treatments.',
+      description: 'General dental care, braces and orthodontic alignment, retainers, and broken tooth treatments.',
     },
     {
       icon: <Heart size={22} color="var(--accent-primary)" />,
@@ -21,7 +21,7 @@ export const TrustBenefits: React.FC = () => {
     {
       icon: <Cpu size={22} color="var(--accent-primary)" />,
       title: 'Modern Clinical Hygiene',
-      description: 'Strict sterilization protocols, modern equipment, and prompt emergency dental care.',
+      description: 'Strict sterilization protocols, modern operatory equipment, and patient-first care.',
     },
   ];
 

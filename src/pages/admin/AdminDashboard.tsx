@@ -76,8 +76,8 @@ export const AdminDashboard: React.FC = () => {
     email: '',
     dob: '',
     appointment_date: new Date().toISOString().split('T')[0],
-    preferred_time: 'Morning (10:00 AM – 01:00 PM)',
-    service: 'General Dental Care & Consultation',
+    preferred_time: 'Morning (09:00 AM – 01:00 PM)',
+    service: 'General Dental Treatment',
     message: '',
     status: 'confirmed' as AppointmentStatus,
   });
@@ -322,8 +322,8 @@ export const AdminDashboard: React.FC = () => {
         email: '',
         dob: '',
         appointment_date: new Date().toISOString().split('T')[0],
-        preferred_time: 'Morning (10:00 AM – 01:00 PM)',
-        service: 'General Dental Care & Consultation',
+        preferred_time: 'Morning (09:00 AM – 01:00 PM)',
+        service: 'General Dental Treatment',
         message: '',
         status: 'confirmed',
       });
@@ -442,7 +442,7 @@ export const AdminDashboard: React.FC = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <img
               src="/logo.png"
-              alt="Shiva Smile Dental Care Hospital Logo"
+              alt="D Care Multi Speciality Dental Hospital Logo"
               style={{
                 width: '46px',
                 height: '46px',
@@ -453,10 +453,10 @@ export const AdminDashboard: React.FC = () => {
             />
             <div>
               <div style={{ fontWeight: 800, fontSize: '0.9375rem', letterSpacing: '-0.01em' }}>
-                SHIVA SMILE <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>ADMIN</span>
+                D CARE <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>ADMIN</span>
               </div>
               <div style={{ fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
-                Dental Care Hospital Management
+                Multi Speciality Dental Hospital Management
               </div>
             </div>
           </div>
@@ -1665,9 +1665,9 @@ export const AdminDashboard: React.FC = () => {
                       boxSizing: 'border-box',
                     }}
                   >
-                    <option value="Morning (10:00 AM – 01:00 PM)">Morning (10:00 AM – 01:00 PM)</option>
+                    <option value="Morning (09:00 AM – 01:00 PM)">Morning (09:00 AM – 01:00 PM)</option>
                     <option value="Afternoon (01:00 PM – 05:00 PM)">Afternoon (01:00 PM – 05:00 PM)</option>
-                    <option value="Evening (05:00 PM – 08:00 PM)">Evening (05:00 PM – 08:00 PM)</option>
+                    <option value="Evening (05:00 PM – 09:00 PM)">Evening (05:00 PM – 09:00 PM)</option>
                   </select>
                 </div>
               </div>
@@ -1690,12 +1690,10 @@ export const AdminDashboard: React.FC = () => {
                       boxSizing: 'border-box',
                     }}
                   >
-                    <option value="General Dental Care & Consultation">General Dental Care &amp; Consultation</option>
-                    <option value="Cosmetic Dentistry & Smile Care">Cosmetic Dentistry &amp; Smile Care</option>
-                    <option value="Dental Implants Consultation">Dental Implants Consultation</option>
-                    <option value="Gum & Periodontal Care">Gum &amp; Periodontal Care</option>
-                    <option value="Pediatric Dentistry (Children)">Pediatric Dentistry (Children)</option>
-                    <option value="Emergency Dental Service">Emergency Dental Service</option>
+                    <option value="General Dental Treatment">General Dental Treatment</option>
+                    <option value="Braces / Orthodontic Treatment">Braces / Orthodontic Treatment</option>
+                    <option value="Retainers">Retainers</option>
+                    <option value="Broken Tooth Treatment">Broken Tooth Treatment</option>
                   </select>
                 </div>
 

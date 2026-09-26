@@ -50,7 +50,7 @@ export const AboutClinic: React.FC<AboutClinicProps> = ({ onExploreClick }) => {
                 marginBottom: '20px',
               }}
             >
-              Shiva Smile Dental Care Hospital is dedicated to providing modern, compassionate, and trustworthy dental care in Azam Pura, Siddipet. We focus on patient comfort, gentle clinical techniques, and personalized attention for every member of the family.
+              D Care Multi Speciality Dental Hospital is dedicated to providing modern, compassionate, and trustworthy dental care in Siddipet. Located on Siddipet – Medak Road, beside Kotak Mahindra Bank, we focus on patient comfort, gentle clinical techniques, and personalized care for every member of the family.
             </p>
 
             <p
@@ -61,7 +61,7 @@ export const AboutClinic: React.FC<AboutClinicProps> = ({ onExploreClick }) => {
                 marginBottom: '36px',
               }}
             >
-              From routine checkups and pediatric dental care to advanced dental implants, cosmetic smile enhancements, periodontal gum care, and emergency dental attention, our clinic provides comprehensive oral healthcare in a welcoming and supportive environment.
+              From routine general dental care and thorough examinations to braces, orthodontic alignment, retainers, and broken tooth treatments, our hospital provides focused oral healthcare in a welcoming and supportive environment.
             </p>
 
             {/* 4 Pillars Grid */}
@@ -78,7 +78,7 @@ export const AboutClinic: React.FC<AboutClinicProps> = ({ onExploreClick }) => {
                 {
                   icon: <HeartHandshake size={20} color="var(--accent-primary)" />,
                   title: 'Professional Dental Care',
-                  description: 'Comprehensive diagnosis and treatment across general, cosmetic, and implant dentistry.',
+                  description: 'Comprehensive diagnosis and verified treatments across general dentistry, braces, retainers, and broken tooth care.',
                 },
                 {
                   icon: <Sparkles size={20} color="var(--accent-primary)" />,
@@ -87,13 +87,13 @@ export const AboutClinic: React.FC<AboutClinicProps> = ({ onExploreClick }) => {
                 },
                 {
                   icon: <Cpu size={20} color="var(--accent-primary)" />,
-                  title: 'Modern Dental Clinic',
+                  title: 'Modern Dental Hospital',
                   description: 'Well-equipped clinical operatories maintained with high standards of hygiene and patient safety.',
                 },
                 {
                   icon: <Award size={20} color="var(--accent-primary)" />,
                   title: 'Serving Siddipet',
-                  description: 'Conveniently located in Azam Pura with weekday hours until 8:00 PM and Sunday morning care.',
+                  description: 'Located on Siddipet – Medak Road, beside Kotak Mahindra Bank, open 7 days a week with convenient morning to evening hours.',
                 },
               ].map((pillar) => (
                 <div key={pillar.title} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -144,7 +144,7 @@ export const AboutClinic: React.FC<AboutClinicProps> = ({ onExploreClick }) => {
           >
             <img
               src="/assets/images/clinic-real-treatment.jpg"
-              alt="Shiva Smile Dental Care Hospital — In-Operatory Clinical Care and Treatment"
+              alt="D Care Multi Speciality Dental Hospital — In-Operatory Clinical Care and Treatment"
               style={{
                 width: '100%',
                 height: '100%',
@@ -175,14 +175,14 @@ export const AboutClinic: React.FC<AboutClinicProps> = ({ onExploreClick }) => {
             >
               <div>
                 <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--accent-primary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                  Shiva Smile Dental Care Hospital
+                  D Care Multi Speciality Dental Hospital
                 </div>
                 <div style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#1d1d1f' }}>
                   Clinical Treatment Operatory
                 </div>
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                Azam Pura, Siddipet
+                Siddipet, Telangana
               </div>
             </div>
           </div>

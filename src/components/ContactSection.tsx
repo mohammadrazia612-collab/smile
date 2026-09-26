@@ -18,7 +18,7 @@ export const ContactSection: React.FC = () => {
           <span className="eyebrow">Connect With Us</span>
           <h2 className="section-title">We look forward to welcoming you.</h2>
           <p className="section-subtitle">
-            Conveniently located in Azam Pura, Siddipet. Visit Shiva Smile Dental Care Hospital for compassionate, professional dental care.
+            Conveniently located on Siddipet – Medak Road, beside Kotak Mahindra Bank. Visit D Care Multi Speciality Dental Hospital for compassionate, professional dental care.
           </p>
         </div>
 
@@ -54,7 +54,7 @@ export const ContactSection: React.FC = () => {
                   marginBottom: '24px',
                 }}
               >
-                Shiva Smile Dental Care Hospital
+                D Care Multi Speciality Dental Hospital
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -79,10 +79,13 @@ export const ContactSection: React.FC = () => {
                       Hospital Location
                     </div>
                     <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1d1d1f' }}>
-                      Azam Pura, Siddipet
+                      Siddipet – Medak Road
                     </div>
                     <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-                      Telangana 502103, India
+                      Beside Kotak Mahindra Bank, Near Prathiba Degree College
+                    </div>
+                    <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                      Siddipet, Telangana – 502103, India
                     </div>
                   </div>
                 </div>
@@ -108,18 +111,18 @@ export const ContactSection: React.FC = () => {
                       Hospital Contact Desk
                     </div>
                     <a
-                      href="tel:+918309864006"
+                      href="tel:+919391884433"
                       style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--accent-primary)' }}
                     >
-                      +91 83098 64006
+                      +91 93918 84433
                     </a>
                     <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                      Direct line for appointments &amp; emergency dental service
+                      Direct line for appointments &amp; consultations
                     </div>
                   </div>
                 </div>
 
-                {/* Emergency Dental Service Notice */}
+                {/* Verified Specialties Notice */}
                 <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                   <div
                     style={{
@@ -137,13 +140,13 @@ export const ContactSection: React.FC = () => {
                   </div>
                   <div>
                     <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '2px' }}>
-                      Emergency Dental Service
+                      Verified Specialties
                     </div>
                     <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1d1d1f' }}>
-                      Prompt Emergency Attention Available
+                      General, Braces, Retainers &amp; Broken Tooth
                     </div>
                     <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-                      Call +91 83098 64006 for urgent dental situations
+                      Compassionate care &amp; gentle clinical attention
                     </div>
                   </div>
                 </div>
@@ -151,7 +154,7 @@ export const ContactSection: React.FC = () => {
                 {/* WhatsApp Action Button */}
                 <div style={{ marginTop: '8px' }}>
                   <a
-                    href="https://wa.me/918309864006"
+                    href="https://wa.me/919391884433"
                     target="_blank"
                     rel="noreferrer"
                     className="btn btn-secondary"
@@ -186,7 +189,7 @@ export const ContactSection: React.FC = () => {
             }}
           >
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
                 <Clock size={20} color="var(--accent-primary)" />
                 <h3
                   style={{
@@ -201,20 +204,47 @@ export const ContactSection: React.FC = () => {
               </div>
 
               {/* Structured Schedule */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '32px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-                  <span style={{ fontSize: '0.9375rem', color: '#1d1d1f', fontWeight: 500 }}>Monday – Saturday</span>
-                  <span style={{ fontSize: '0.9375rem', color: 'var(--accent-primary)', fontWeight: 600 }}>10:00 AM – 8:00 PM</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                  <span style={{ fontSize: '0.9375rem', color: '#1d1d1f', fontWeight: 500 }}>Monday</span>
+                  <span style={{ fontSize: '0.9375rem', color: 'var(--accent-primary)', fontWeight: 600 }}>10:00 AM – 9:00 PM</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '10px', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                  <span style={{ fontSize: '0.9375rem', color: '#1d1d1f', fontWeight: 500 }}>Tuesday</span>
+                  <span style={{ fontSize: '0.9375rem', color: 'var(--accent-primary)', fontWeight: 600 }}>9:00 AM – 9:00 PM</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                  <span style={{ fontSize: '0.9375rem', color: '#1d1d1f', fontWeight: 500 }}>Wednesday – Saturday</span>
+                  <span style={{ fontSize: '0.9375rem', color: 'var(--accent-primary)', fontWeight: 600 }}>10:00 AM – 9:00 PM</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
                   <span style={{ fontSize: '0.9375rem', color: '#1d1d1f', fontWeight: 500 }}>Sunday</span>
-                  <span style={{ fontSize: '0.9375rem', color: '#1d1d1f', fontWeight: 600 }}>10:30 AM – 2:00 PM</span>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '4px' }}>
-                  <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Emergency Care</span>
-                  <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', fontWeight: 600 }}>Call Ahead for Urgent Visits</span>
+                  <span style={{ fontSize: '0.9375rem', color: '#1d1d1f', fontWeight: 600 }}>9:00 AM – 5:00 PM</span>
                 </div>
               </div>
+            </div>
+
+            {/* Google Maps Embed */}
+            <div
+              style={{
+                borderRadius: '16px',
+                overflow: 'hidden',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+                marginBottom: '16px',
+                lineHeight: 0,
+              }}
+            >
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3792.3479457250933!2d78.8461053749523!3d18.101716382912485!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcc92ad4498eda3%3A0xdf2cdef705c498c!2sD%20Care%20Multi%20Speciality%20Dental%20Hospital!5e0!3m2!1sen!2sin!4v1790414874308!5m2!1sen!2sin"
+                width="100%"
+                height="220"
+                style={{ border: 0, display: 'block' }}
+                allowFullScreen={true}
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+                title="D Care Multi Speciality Dental Hospital Google Map"
+              />
             </div>
 
             {/* Apple Map Style Visual Pin Card */}
@@ -222,7 +252,7 @@ export const ContactSection: React.FC = () => {
               style={{
                 borderRadius: '16px',
                 backgroundColor: 'var(--bg-subtle)',
-                padding: '20px',
+                padding: '16px 20px',
                 border: '1px solid rgba(0, 0, 0, 0.05)',
                 display: 'flex',
                 alignItems: 'center',
@@ -231,14 +261,14 @@ export const ContactSection: React.FC = () => {
             >
               <div>
                 <div style={{ fontSize: '0.8125rem', fontWeight: 700, color: '#1d1d1f', marginBottom: '2px' }}>
-                  Azam Pura, Siddipet
+                  Siddipet – Medak Road, Siddipet
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                  Telangana 502103, India
+                  Beside Kotak Mahindra Bank, Telangana 502103
                 </div>
               </div>
               <a
-                href="https://www.google.com/maps/search/?api=1&query=Shiva+Smile+Dental+Care+Hospital+Azam+Pura+Siddipet+Telangana+502103"
+                href="https://www.google.com/maps/search/?api=1&query=D+Care+Multi+Speciality+Dental+Hospital+Siddipet"
                 target="_blank"
                 rel="noreferrer"
                 className="link-animated"

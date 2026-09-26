@@ -15,44 +15,44 @@ export const FAQSection: React.FC = () => {
     {
       id: 'faq-1',
       category: 'Location & Appointments',
-      question: 'Where is Shiva Smile Dental Care Hospital located and how do I book an appointment?',
+      question: 'Where is D Care Multi Speciality Dental Hospital located and how do I book an appointment?',
       answer:
-        'We are conveniently located at Azam Pura, Siddipet, Telangana 502103, India. You can book an appointment using the online form on this page or by calling our direct clinic line at +91 83098 64006.',
+        'We are located at Siddipet – Medak Road, Beside Kotak Mahindra Bank, Near Prathiba Degree College, Siddipet, Telangana – 502103, India. You can book an appointment using the online form on this page or by calling our hospital line directly at +91 93918 84433.',
     },
     {
       id: 'faq-2',
-      category: 'Clinic Hours',
+      category: 'Hospital Hours',
       question: 'What are your hospital opening hours?',
       answer:
-        'Shiva Smile Dental Care Hospital is open 7 days a week: Monday through Saturday from 10:00 AM to 8:00 PM, and Sunday from 10:30 AM to 2:00 PM.',
+        'D Care Multi Speciality Dental Hospital is open 7 days a week: Monday from 10:00 AM – 9:00 PM, Tuesday from 9:00 AM – 9:00 PM, Wednesday through Saturday from 10:00 AM – 9:00 PM, and Sunday from 9:00 AM – 5:00 PM.',
     },
     {
       id: 'faq-3',
-      category: 'Services',
-      question: 'What dental treatments and clinical disciplines do you provide?',
+      category: 'Services & Treatments',
+      question: 'What dental treatments do you provide at D Care?',
       answer:
-        'We provide comprehensive dental hospital care including general dental checkups, cosmetic dentistry, dental implants, gum / periodontal care, pediatric dentistry, and prompt emergency dental treatments.',
+        'We provide verified treatments including General Dental Treatment, Braces / Orthodontic Treatment, Retainers, and Broken Tooth Treatment.',
     },
     {
       id: 'faq-4',
-      category: 'Dental Implants',
-      question: 'Do you provide dental implants and periodontal gum care?',
+      category: 'Orthodontics & Braces',
+      question: 'Do you provide braces and orthodontic teeth alignment?',
       answer:
-        'Yes. As a verified dental implants provider and periodontist hospital in Siddipet, we offer durable dental implant solutions for missing teeth along with focused care for gum health and periodontal stabilization.',
+        'Yes. We provide braces and orthodontic treatments to straighten teeth, close gaps, and correct bite alignment for patients in Siddipet.',
     },
     {
       id: 'faq-5',
-      category: 'Pediatric Care',
-      question: 'Is Shiva Smile Dental Care Hospital child and family-friendly?',
+      category: 'Retainers & Stability',
+      question: 'Do you provide retainers after braces or alignment?',
       answer:
-        'Yes. We provide pediatric dental care with a gentle, patient-friendly approach designed to ensure comfortable visits for children, adolescents, and families in a welcoming hospital environment.',
+        'Yes. We provide custom-fabricated fixed and removable retainers to maintain tooth stability and keep teeth properly aligned following orthodontic treatment.',
     },
     {
       id: 'faq-6',
-      category: 'Emergency Care',
-      question: 'Do you offer emergency dental services in Siddipet?',
+      category: 'Broken Tooth Treatment',
+      question: 'How do you treat chipped, cracked, or broken teeth?',
       answer:
-        'Yes. We provide emergency dental care for acute tooth pain, sudden oral trauma, broken teeth, or lost restorations. Please call our hospital directly at +91 83098 64006 for immediate care.',
+        'We provide restorative broken tooth treatments to assess tooth structure, alleviate discomfort, and rebuild the strength and natural shape of damaged teeth. Call us directly at +91 93918 84433.',
     },
   ];
 

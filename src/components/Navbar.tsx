@@ -73,7 +73,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
           >
             <img
               src="/logo.png"
-              alt="Shiva Smile Dental Care Hospital Logo"
+              alt="D Care Multi Speciality Dental Hospital Logo"
               className="navbar-brand-logo"
               style={{
                 width: '50px',
@@ -95,8 +95,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookClick }) => {
                 whiteSpace: 'nowrap',
               }}
             >
-              <span className="brand-wordmark-main">SHIVA SMILE</span>{' '}
-              <span className="brand-wordmark-sub" style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>DENTAL CARE</span>
+              <span className="brand-wordmark-main">D CARE</span>{' '}
+              <span className="brand-wordmark-sub" style={{ fontWeight: 500, color: 'var(--text-secondary)' }}>MULTI SPECIALITY DENTAL HOSPITAL</span>
             </span>
           </a>
 

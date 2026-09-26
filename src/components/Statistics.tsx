@@ -41,7 +41,7 @@ export const Statistics: React.FC = () => {
       isDecimal: true,
       suffix: '/5',
       label: 'Google Rating',
-      description: '51 verified patient reviews',
+      description: '91 verified patient reviews',
       icon: <Star size={24} strokeWidth={1.8} color="#0071e3" />,
       iconBg: 'rgba(0, 113, 227, 0.08)',
       iconBorder: 'rgba(0, 113, 227, 0.14)',
@@ -50,7 +50,7 @@ export const Statistics: React.FC = () => {
     {
       id: 'reviews',
       type: 'number',
-      targetNumber: 51,
+      targetNumber: 91,
       suffix: '+',
       suffixColor: '#10b981',
       label: 'Google Reviews',
@@ -66,7 +66,7 @@ export const Statistics: React.FC = () => {
       targetNumber: 7,
       suffix: 'Days',
       label: 'Weekly Care',
-      description: 'Mon–Sat 10am–8pm • Sun 10:30am–2pm',
+      description: 'Mon–Sat to 9:00 PM • Sun 9am–5pm',
       icon: <Clock size={24} strokeWidth={1.8} color="#7c3aed" />,
       iconBg: 'rgba(124, 58, 237, 0.08)',
       iconBorder: 'rgba(124, 58, 237, 0.16)',
@@ -77,7 +77,7 @@ export const Statistics: React.FC = () => {
       type: 'text',
       displayText: 'Siddipet',
       label: 'Hospital Location',
-      description: 'Azam Pura, Telangana 502103',
+      description: 'Siddipet – Medak Road, beside Kotak Bank',
       icon: <MapPin size={24} strokeWidth={1.8} color="#0071e3" />,
       iconBg: 'rgba(0, 113, 227, 0.08)',
       iconBorder: 'rgba(0, 113, 227, 0.14)',
@@ -96,7 +96,7 @@ export const Statistics: React.FC = () => {
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReducedMotion) {
-      setCounts({ rating: 49, reviews: 51, days: 7 });
+      setCounts({ rating: 49, reviews: 91, days: 7 });
       setPhase('settled');
       return;
     }
@@ -127,7 +127,7 @@ export const Statistics: React.FC = () => {
 
       setCounts({
         rating: Math.min(49, Math.round(49 * ease)),
-        reviews: Math.min(51, Math.round(51 * ease)),
+        reviews: Math.min(91, Math.round(91 * ease)),
         days: Math.min(7, Math.round(7 * ease)),
       });
 
@@ -137,7 +137,7 @@ export const Statistics: React.FC = () => {
         // Clean final settling
         setCounts({
           rating: 49,
-          reviews: 51,
+          reviews: 91,
           days: 7,
         });
         setPhase('settled');

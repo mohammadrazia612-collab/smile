@@ -1,5 +1,4 @@
-import React from 'react';
-import { ShieldCheck, Sparkles, Activity, Layers, SunMedium, HeartPulse, ArrowUpRight } from 'lucide-react';
+import { ShieldCheck, Sparkles, Layers, HeartPulse, ArrowUpRight } from 'lucide-react';
 
 interface QuickServiceItem {
   id: string;
@@ -18,51 +17,35 @@ export const QuickServices: React.FC<QuickServicesProps> = ({ onSelectService })
   const services: QuickServiceItem[] = [
     {
       id: 'general-dental',
-      name: 'General Dental Care',
-      category: 'Preventive & Restorative',
-      tagline: 'Comprehensive exams, cleanings, and tooth-colored restorations.',
+      name: 'General Dental Treatment',
+      category: 'Preventive & Routine Care',
+      tagline: 'Comprehensive exams, professional cleanings, and essential oral care.',
       icon: <HeartPulse size={20} color="var(--accent-primary)" />,
-      treatmentName: 'General Dental Care',
+      treatmentName: 'General Dental Treatment',
     },
     {
-      id: 'cosmetic',
-      name: 'Cosmetic Dentistry',
-      category: 'Smile Aesthetics',
-      tagline: 'Aesthetic enhancements and smile restorations for confident smiles.',
+      id: 'braces-orthodontics',
+      name: 'Braces / Orthodontic Treatment',
+      category: 'Teeth Alignment',
+      tagline: 'Orthodontic alignment for misaligned teeth, crowding, and bite balance.',
       icon: <Sparkles size={20} color="var(--accent-primary)" />,
-      treatmentName: 'Cosmetic Dentistry',
+      treatmentName: 'Braces / Orthodontic Treatment',
     },
     {
-      id: 'implants',
-      name: 'Dental Implants',
-      category: 'Tooth Replacement',
-      tagline: 'Fixed tooth restorations designed for natural look, feel, and function.',
+      id: 'retainers',
+      name: 'Retainers',
+      category: 'Post-Orthodontic Care',
+      tagline: 'Custom fixed and removable retainers to maintain straight, aligned teeth.',
       icon: <ShieldCheck size={20} color="var(--accent-primary)" />,
-      treatmentName: 'Dental Implants',
+      treatmentName: 'Retainers',
     },
     {
-      id: 'periodontal',
-      name: 'Gum & Periodontal Care',
-      category: 'Periodontics',
-      tagline: 'Targeted gum health therapies, deep scaling, and periodontal maintenance.',
-      icon: <Activity size={20} color="var(--accent-primary)" />,
-      treatmentName: 'Gum & Periodontal Care',
-    },
-    {
-      id: 'pediatric',
-      name: 'Pediatric Dentistry',
-      category: 'Children’s Dental Care',
-      tagline: 'Gentle, reassuring, and kid-friendly oral health care for young smiles.',
-      icon: <SunMedium size={20} color="var(--accent-primary)" />,
-      treatmentName: 'Pediatric Dentistry',
-    },
-    {
-      id: 'emergency',
-      name: 'Emergency Dental Care',
-      category: 'Urgent Attention',
-      tagline: 'Prompt evaluation and relief for acute dental pain or sudden injury.',
+      id: 'broken-tooth',
+      name: 'Broken Tooth Treatment',
+      category: 'Restorative Dental Care',
+      tagline: 'Relief and restorative repair for chipped, cracked, or broken teeth.',
       icon: <Layers size={20} color="var(--accent-primary)" />,
-      treatmentName: 'Emergency Dental Care',
+      treatmentName: 'Broken Tooth Treatment',
     },
   ];
 

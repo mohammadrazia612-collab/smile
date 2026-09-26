@@ -276,7 +276,7 @@ export const BeforeAfter: React.FC = () => {
           >
             <span>Case Demonstration: Tooth Whitening &amp; Enamel Restoration</span>
             <span>•</span>
-            <span>Shiva Smile Dental Care Hospital</span>
+            <span>D Care Multi Speciality Dental Hospital</span>
           </div>
 
           <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>

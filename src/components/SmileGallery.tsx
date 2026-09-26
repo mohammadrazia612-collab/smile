@@ -356,7 +356,7 @@ export const SmileGallery: React.FC = () => {
           >
             <span>Representative Clinical Case Documentation</span>
             <span>•</span>
-            <span style={{ color: '#0071e3' }}>Shiva Smile Dental Care Hospital</span>
+            <span style={{ color: '#0071e3' }}>D Care Multi Speciality Dental Hospital</span>
           </div>
 
           <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>

@@ -7,7 +7,7 @@ export const Testimonials: React.FC = () => {
       id: 1,
       name: '[Patient Name / Google Reviewer]',
       title: 'Verified Patient • Siddipet',
-      treatment: 'General Dental Care',
+      treatment: 'General Dental Treatment',
       quote:
         'Professional dental care and attentive staff. The hospital environment in Siddipet is clean, comfortable, and the team ensures a gentle patient experience.',
       rating: 5,
@@ -17,19 +17,19 @@ export const Testimonials: React.FC = () => {
       id: 2,
       name: '[Patient Name / Google Reviewer]',
       title: 'Verified Patient • Siddipet',
-      treatment: 'Dental Implants & Restorations',
+      treatment: 'Braces / Orthodontic Treatment',
       quote:
-        'Very thorough dental examination and treatment explanation. The procedure was smooth with great attention to comfort and hygiene.',
+        'Very thorough dental examination and orthodontic treatment explanation. The procedure was smooth with great attention to comfort and dental alignment.',
       rating: 5,
       year: 'Google Business Review',
     },
     {
       id: 3,
       name: '[Patient Name / Google Reviewer]',
-      title: 'Family Dental Care',
-      treatment: 'Pediatric & Preventive Dentistry',
+      title: 'Verified Patient • Siddipet',
+      treatment: 'Broken Tooth Treatment & Retainers',
       quote:
-        'A warm and family-friendly dental clinic in Azam Pura, Siddipet. Kind approach with gentle care for kids and adults alike.',
+        'A clean, well-maintained hospital on Siddipet – Medak Road. Kind approach with gentle, reassuring care for teeth repairs and retainers.',
       rating: 5,
       year: 'Google Business Review',
     },
@@ -61,9 +61,9 @@ export const Testimonials: React.FC = () => {
         {/* Header */}
         <div className="section-header apple-reveal">
           <span className="eyebrow">Google Business Reviews</span>
-          <h2 className="section-title">Rated 4.9 / 5 with 51 Google Reviews</h2>
+          <h2 className="section-title">Rated 4.9 / 5 with 91 Google Reviews</h2>
           <p className="section-subtitle">
-            Authentic patient feedback and experiences at Shiva Smile Dental Care Hospital in Siddipet.
+            Authentic patient feedback and experiences at D Care Multi Speciality Dental Hospital in Siddipet.
           </p>
         </div>
 

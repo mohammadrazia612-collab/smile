@@ -57,7 +57,7 @@ INSERT INTO auth.identities (
   created_at,
   updated_at
 )
-SELECT 
+SELECT
   u.id,
   u.id,
   format('{"sub":"%s","email":"%s"}', u.id::text, u.email)::jsonb,

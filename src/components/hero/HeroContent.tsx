@@ -63,7 +63,7 @@ export const HeroContent: React.FC<HeroContentProps> = ({ scrollY }) => {
             color: 'var(--accent-primary)',
           }}
         >
-          Shiva Smile Dental Care Hospital • Siddipet
+          D Care Multi Speciality Dental Hospital • Siddipet
         </span>
       </div>
 

@@ -33,7 +33,7 @@ export const Footer: React.FC = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '16px' }}>
                 <img
                   src="/logo.png"
-                  alt="Shiva Smile Dental Care Hospital Logo"
+                  alt="D Care Multi Speciality Dental Hospital Logo"
                   style={{
                     width: '54px',
                     height: '54px',
@@ -43,7 +43,7 @@ export const Footer: React.FC = () => {
                   }}
                 />
                 <span style={{ fontWeight: 700, fontSize: '0.9375rem', color: '#1d1d1f' }}>
-                  SHIVA SMILE <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>DENTAL CARE HOSPITAL</span>
+                  D CARE <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>MULTI SPECIALITY DENTAL HOSPITAL</span>
                 </span>
               </div>
 
@@ -52,11 +52,11 @@ export const Footer: React.FC = () => {
               </p>
 
               <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                Azam Pura, Siddipet, Telangana 502103
+                Siddipet – Medak Road, Beside Kotak Mahindra Bank, Near Prathiba Degree College, Siddipet, Telangana – 502103, India
                 <br />
-                Phone: <a href="tel:+918309864006" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>+91 83098 64006</a>
+                Phone: <a href="tel:+919391884433" style={{ color: 'var(--accent-primary)', fontWeight: 600 }}>+91 93918 84433</a>
                 <br />
-                Mon–Sat: 10:00 AM – 8:00 PM | Sun: 10:30 AM – 2:00 PM
+                Mon, Wed–Sat: 10:00 AM – 9:00 PM | Tue: 9:00 AM – 9:00 PM | Sun: 9:00 AM – 5:00 PM
               </div>
             </div>
 
@@ -66,12 +66,10 @@ export const Footer: React.FC = () => {
                 Treatments
               </div>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>General Dental Care</a></li>
-                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>Cosmetic Dentistry</a></li>
-                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>Dental Implants</a></li>
-                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>Gum &amp; Periodontal Care</a></li>
-                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>Pediatric Dentistry</a></li>
-                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>Emergency Dental Service</a></li>
+                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>General Dental Treatment</a></li>
+                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>Braces / Orthodontic Treatment</a></li>
+                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>Retainers</a></li>
+                <li><a href="#treatments" style={{ fontSize: '0.875rem' }}>Broken Tooth Treatment</a></li>
               </ul>
             </div>
 
@@ -82,11 +80,10 @@ export const Footer: React.FC = () => {
               </div>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <li><a href="#technology" style={{ fontSize: '0.875rem' }}>Digital Diagnostics</a></li>
-                <li><a href="#technology" style={{ fontSize: '0.875rem' }}>Precision Implants</a></li>
-                <li><a href="#technology" style={{ fontSize: '0.875rem' }}>Sterilization Protocols</a></li>
-                <li><a href="#experience" style={{ fontSize: '0.875rem' }}>Comfortable Operatories</a></li>
-                <li><a href="#about" style={{ fontSize: '0.875rem' }}>Hospital Story</a></li>
-                <li><a href="#doctors" style={{ fontSize: '0.875rem' }}>Dental Specialists</a></li>
+                <li><a href="#technology" style={{ fontSize: '0.875rem' }}>Sterilization Standards</a></li>
+                <li><a href="#experience" style={{ fontSize: '0.875rem' }}>Patient Experience</a></li>
+                <li><a href="#about" style={{ fontSize: '0.875rem' }}>Hospital Overview</a></li>
+                <li><a href="#doctors" style={{ fontSize: '0.875rem' }}>Clinical Care Teams</a></li>
               </ul>
             </div>
 
@@ -97,10 +94,10 @@ export const Footer: React.FC = () => {
               </div>
               <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <li><a href="#results" style={{ fontSize: '0.875rem' }}>Clinical Cases</a></li>
-                <li><a href="#testimonials" style={{ fontSize: '0.875rem' }}>Google Reviews (4.9★)</a></li>
+                <li><a href="#testimonials" style={{ fontSize: '0.875rem' }}>Google Reviews (4.9★, 91 reviews)</a></li>
                 <li><a href="#appointment" style={{ fontSize: '0.875rem' }}>Book Appointment</a></li>
                 <li><a href="#contact" style={{ fontSize: '0.875rem' }}>Clinic Location</a></li>
-                <li><a href="tel:+918309864006" style={{ fontSize: '0.875rem' }}>Call +91 83098 64006</a></li>
+                <li><a href="tel:+919391884433" style={{ fontSize: '0.875rem' }}>Call +91 93918 84433</a></li>
               </ul>
             </div>
           </div>
@@ -120,7 +117,7 @@ export const Footer: React.FC = () => {
             }}
           >
             <div>
-              © {new Date().getFullYear()} Shiva Smile Dental Care Hospital. All rights reserved. Azam Pura, Siddipet, Telangana 502103.
+              © {new Date().getFullYear()} D Care Multi Speciality Dental Hospital. All rights reserved. Siddipet – Medak Road, Beside Kotak Mahindra Bank, Siddipet, Telangana – 502103.
             </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
