@@ -26,7 +26,7 @@ export const PublicWebsite: React.FC = () => {
   useAppleInteractions();
 
   const appointmentRef = useRef<HTMLElement>(null);
-  const [selectedTreatment, setSelectedTreatment] = useState('General Dental Care & Consultation');
+  const [selectedTreatment, setSelectedTreatment] = useState('General Dental Treatment');
 
   const scrollToAppointment = () => {
     if (appointmentRef.current) {

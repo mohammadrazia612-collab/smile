@@ -52,17 +52,17 @@ export const AdminLogin: React.FC = () => {
       const lower = rawMsg.toLowerCase();
       if (lower.includes('database error querying schema')) {
         setError(
-          'Supabase schema mismatch: Please run "DELETE FROM auth.users WHERE email = \'' +
+          'Supabase schema mismatch: Please run \"DELETE FROM auth.users WHERE email = \'' +
             email.trim() +
-            '\';" in your Supabase SQL Editor, then create the user cleanly in Authentication -> Users with "Auto Confirm" turned ON.'
+            '\';\" in your Supabase SQL Editor, then create the user cleanly in Authentication -> Users with \"Auto Confirm\" turned ON.'
         );
       } else if (lower.includes('email not confirmed')) {
         setError(
-          'Your admin account email is not confirmed yet. Run "UPDATE auth.users SET email_confirmed_at = now();" in your Supabase SQL Editor, or turn off "Confirm email" in Supabase Auth settings.'
+          'Your admin account email is not confirmed yet. Run \"UPDATE auth.users SET email_confirmed_at = now();\" in your Supabase SQL Editor, or turn off \"Confirm email\" in Supabase Auth settings.'
         );
       } else if (lower.includes('invalid login credentials')) {
         setError(
-          'Invalid login credentials. Make sure you have created this account in your Supabase Dashboard (Authentication -> Users) with "Auto Confirm" enabled.'
+          'Invalid login credentials. Make sure you have created this account in your Supabase Dashboard (Authentication -> Users) with \"Auto Confirm\" enabled.'
         );
       } else {
         setError(rawMsg || 'Invalid administrator credentials. Please check your email and password.');
@@ -83,7 +83,7 @@ export const AdminLogin: React.FC = () => {
           backgroundColor: '#f5f5f7',
         }}
       >
-        <Loader2 size={32} className="spin-loader" color="var(--accent-primary)" />
+        <Loader2 size={32} className=\"spin-loader\" color=\"var(--accent-primary)\" />
         <style>{`
           @keyframes spin {
             from { transform: rotate(0deg); }
@@ -107,7 +107,7 @@ export const AdminLogin: React.FC = () => {
         justifyContent: 'center',
         backgroundColor: '#f5f5f7',
         padding: '24px 16px',
-        fontFamily: 'var(--font-sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif)',
+        fontFamily: 'var(--font-sans, -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, sans-serif)',
       }}
     >
       {/* Back button */}
@@ -130,7 +130,7 @@ export const AdminLogin: React.FC = () => {
           onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
         >
           <ArrowLeft size={16} />
-          <span>Return to Shiva Smile Website</span>
+          <span>Return to D Care Website</span>
         </button>
       </div>
 
@@ -157,8 +157,8 @@ export const AdminLogin: React.FC = () => {
             }}
           >
             <img
-              src="/logo.png"
-              alt="Shiva Smile Dental Care Hospital Logo"
+              src=\"/logo.png\"
+              alt=\"D Care Multi Speciality Dental Hospital Logo\"
               style={{
                 width: '76px',
                 height: '76px',
@@ -180,14 +180,14 @@ export const AdminLogin: React.FC = () => {
             Hospital Admin Portal
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
-            Shiva Smile Dental Care Hospital
+            D Care Multi Speciality Dental Hospital
           </p>
         </div>
 
         {/* Error Alert */}
         {error && (
           <div
-            role="alert"
+            role=\"alert\"
             style={{
               marginBottom: '20px',
               padding: '14px 16px',
@@ -200,195 +200,7 @@ export const AdminLogin: React.FC = () => {
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', fontWeight: 600 }}>
-              <AlertCircle size={16} color="#dc2626" style={{ flexShrink: 0 }} />
+              <AlertCircle size={16} color=\"#dc2626\" style={{ flexShrink: 0 }} />
               <span>{error}</span>
             </div>
-            {error.toLowerCase().includes('invalid') && (
-              <div style={{ fontSize: '0.75rem', color: '#7f1d1d', marginTop: '6px', paddingLeft: '24px' }}>
-                <ul style={{ margin: 0, paddingLeft: '14px', lineHeight: 1.5 }}>
-                  <li>Check for typos (e.g. number <strong>00</strong> vs letter <strong>oo</strong>).</li>
-                  <li>Ensure user is created in <a href="https://supabase.com/dashboard/project/rniyxelqdwfdogsnosgu/auth/users" target="_blank" rel="noreferrer" style={{ color: '#991b1b', fontWeight: 600, textDecoration: 'underline' }}>Supabase Auth</a> with <strong>Auto Confirm</strong> ON.</li>
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit}>
-          {/* Email field */}
-          <div style={{ marginBottom: '18px' }}>
-            <label
-              htmlFor="admin-email"
-              style={{
-                display: 'block',
-                fontSize: '0.8125rem',
-                fontWeight: 600,
-                color: '#1d1d1f',
-                marginBottom: '8px',
-              }}
-            >
-              Staff Email Address
-            </label>
-            <div style={{ position: 'relative' }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  left: '14px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-muted)',
-                  pointerEvents: 'none',
-                }}
-              >
-                <Mail size={16} />
-              </div>
-              <input
-                id="admin-email"
-                type="email"
-                autoComplete="email"
-                required
-                placeholder="affkhan63007@gmail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px 14px 12px 40px',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
-                  fontSize: '0.9375rem',
-                  outline: 'none',
-                  backgroundColor: '#ffffff',
-                  color: '#1d1d1f',
-                  boxSizing: 'border-box',
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Password field */}
-          <div style={{ marginBottom: '24px' }}>
-            <label
-              htmlFor="admin-password"
-              style={{
-                display: 'block',
-                fontSize: '0.8125rem',
-                fontWeight: 600,
-                color: '#1d1d1f',
-                marginBottom: '8px',
-              }}
-            >
-              Password
-            </label>
-            <div style={{ position: 'relative' }}>
-              <div
-                style={{
-                  position: 'absolute',
-                  left: '14px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  color: 'var(--text-muted)',
-                  pointerEvents: 'none',
-                }}
-              >
-                <Lock size={16} />
-              </div>
-              <input
-                id="admin-password"
-                type={showPassword ? 'text' : 'password'}
-                autoComplete="current-password"
-                required
-                placeholder="••••••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '12px 42px 12px 40px',
-                  borderRadius: '12px',
-                  border: '1px solid rgba(0, 0, 0, 0.12)',
-                  fontSize: '0.9375rem',
-                  outline: 'none',
-                  backgroundColor: '#ffffff',
-                  color: '#1d1d1f',
-                  boxSizing: 'border-box',
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                style={{
-                  position: 'absolute',
-                  right: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--text-muted)',
-                  cursor: 'pointer',
-                  padding: '4px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-              </button>
-            </div>
-          </div>
-
-          {/* Submit button */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="btn btn-primary"
-            style={{
-              width: '100%',
-              padding: '14px',
-              fontSize: '0.9375rem',
-              fontWeight: 600,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              cursor: isSubmitting ? 'not-allowed' : 'pointer',
-              opacity: isSubmitting ? 0.8 : 1,
-            }}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 size={16} className="spin-loader" />
-                <span>Authenticating...</span>
-              </>
-            ) : (
-              <span>Sign In to Admin Portal</span>
-            )}
-          </button>
-        </form>
-
-        <div
-          style={{
-            marginTop: '24px',
-            textAlign: 'center',
-            fontSize: '0.75rem',
-            color: 'var(--text-muted)',
-            lineHeight: 1.5,
-          }}
-        >
-          Protected system. Authorized clinic personnel only.
-          <br />
-          All actions are authenticated and audited.
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        .spin-loader {
-          animation: spin 0.9s linear infinite;
-        }
-      `}</style>
-    </div>
-  );
-};
+            {error.toLowerCase().includes('invalid') && (\n              <div style={{ fontSize: '0.75rem', color: '#7f1d1d', marginTop: '6px', paddingLeft: '24px' }}>\n                <ul style={{ margin: 0, paddingLeft: '14px', lineHeight: 1.5 }}>\n                  <li>Check for typos (e.g. number <strong>00</strong> vs letter <strong>oo</strong>).</li>\n                  <li>Ensure user is created in <a href=\"https://supabase.com/dashboard/project/rniyxelqdwfdogsnosgu/auth/users\" target=\"_blank\" rel=\"noreferrer\" style={{ color: '#991b1b', fontWeight: 600, textDecoration: 'underline' }}>Supabase Auth</a> with <strong>Auto Confirm</strong> ON.</li>\n                </ul>\n              </div>\n            )}\n          </div>\n        )}\n\n        <form onSubmit={handleSubmit}>\n          {/* Email field */}\n          <div style={{ marginBottom: '18px' }}>\n            <label\n              htmlFor=\"admin-email\"\n              style={{\n                display: 'block',\n                fontSize: '0.8125rem',\n                fontWeight: 600,\n                color: '#1d1d1f',\n                marginBottom: '8px',\n              }}\n            >\n              Staff Email Address\n            </label>\n            <div style={{ position: 'relative' }}>\n              <div\n                style={{\n                  position: 'absolute',\n                  left: '14px',\n                  top: '50%',\n                  transform: 'translateY(-50%)',\n                  color: 'var(--text-muted)',\n                  pointerEvents: 'none',\n                }}\n              >\n                <Mail size={16} />\n              </div>\n              <input\n                id=\"admin-email\"\n                type=\"email\"\n                autoComplete=\"email\"\n                required\n                placeholder=\"affkhan63007@gmail.com\"\n                value={email}\n                onChange={(e) => setEmail(e.target.value)}\n                style={{\n                  width: '100%',\n                  padding: '12px 14px 12px 40px',\n                  borderRadius: '12px',\n                  border: '1px solid rgba(0, 0, 0, 0.12)',\n                  fontSize: '0.9375rem',\n                  outline: 'none',\n                  backgroundColor: '#ffffff',\n                  color: '#1d1d1f',\n                  boxSizing: 'border-box',\n                }}\n              />\n            </div>\n          </div>\n\n          {/* Password field */}\n          <div style={{ marginBottom: '24px' }}>\n            <label\n              htmlFor=\"admin-password\"\n              style={{\n                display: 'block',\n                fontSize: '0.8125rem',\n                fontWeight: 600,\n                color: '#1d1d1f',\n                marginBottom: '8px',\n              }}\n            >\n              Password\n            </label>\n            <div style={{ position: 'relative' }}>\n              <div\n                style={{\n                  position: 'absolute',\n                  left: '14px',\n                  top: '50%',\n                  transform: 'translateY(-50%)',\n                  color: 'var(--text-muted)',\n                  pointerEvents: 'none',\n                }}\n              >\n                <Lock size={16} />\n              </div>\n              <input\n                id=\"admin-password\"\n                type={showPassword ? 'text' : 'password'}\n                autoComplete=\"current-password\"\n                required\n                placeholder=\"••••••••••••\"\n                value={password}\n                onChange={(e) => setPassword(e.target.value)}\n                style={{\n                  width: '100%',\n                  padding: '12px 42px 12px 40px',\n                  borderRadius: '12px',\n                  border: '1px solid rgba(0, 0, 0, 0.12)',\n                  fontSize: '0.9375rem',\n                  outline: 'none',\n                  backgroundColor: '#ffffff',\n                  color: '#1d1d1f',\n                  boxSizing: 'border-box',\n                }}\n              />\n              <button\n                type=\"button\"\n                onClick={() => setShowPassword(!showPassword)}\n                aria-label={showPassword ? 'Hide password' : 'Show password'}\n                style={{\n                  position: 'absolute',\n                  right: '12px',\n                  top: '50%',\n                  transform: 'translateY(-50%)',\n                  background: 'none',\n                  border: 'none',\n                  color: 'var(--text-muted)',\n                  cursor: 'pointer',\n                  padding: '4px',\n                  display: 'flex',\n                  alignItems: 'center',\n                  justifyContent: 'center',\n                }}\n              >\n                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}\n              </button>\n            </div>\n          </div>\n\n          {/* Submit button */}\n          <button\n            type=\"submit\"\n            disabled={isSubmitting}\n            className=\"btn btn-primary\"\n            style={{\n              width: '100%',\n              padding: '14px',\n              fontSize: '0.9375rem',\n              fontWeight: 600,\n              display: 'flex',\n              alignItems: 'center',\n              justifyContent: 'center',\n              gap: '8px',\n              cursor: isSubmitting ? 'not-allowed' : 'pointer',\n              opacity: isSubmitting ? 0.8 : 1,\n            }}\n          >\n            {isSubmitting ? (\n              <>\n                <Loader2 size={16} className=\"spin-loader\" />\n                <span>Authenticating...</span>\n              </>\n            ) : (\n              <span>Sign In to Admin Portal</span>\n            )}\n          </button>\n        </form>\n\n        <div\n          style={{\n            marginTop: '24px',\n            textAlign: 'center',\n            fontSize: '0.75rem',\n            color: 'var(--text-muted)',\n            lineHeight: 1.5,\n          }}\n        >\n          Protected system. Authorized clinic personnel only.\n          <br />\n          All actions are authenticated and audited.\n        </div>\n      </div>\n\n      <style>{`\n        @keyframes spin {\n          from { transform: rotate(0deg); }\n          to { transform: rotate(360deg); }\n        }\n        .spin-loader {\n          animation: spin 0.9s linear infinite;\n        }\n      `}</style>\n    </div>\n  );\n};\n

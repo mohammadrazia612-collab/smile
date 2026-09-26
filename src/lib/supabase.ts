@@ -59,7 +59,7 @@ export interface AppointmentSyncMessage {
 let syncBroadcastChannel: BroadcastChannel | null = null;
 try {
   if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-    syncBroadcastChannel = new BroadcastChannel('shiva_smile_appointments_sync');
+    syncBroadcastChannel = new BroadcastChannel('d_care_appointments_sync');
   }
 } catch (e) {
   console.warn('BroadcastChannel initialization note:', e);
@@ -89,7 +89,7 @@ export function broadcastAppointmentChange(
   // Fallback to localStorage event for older browsers or cross-context sync
   try {
     if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.setItem('shiva_smile_last_sync_event', JSON.stringify(message));
+      window.localStorage.setItem('d_care_last_sync_event', JSON.stringify(message));
     }
   } catch {
     // Ignore storage quota errors
@@ -109,7 +109,7 @@ export function onAppointmentSyncEvent(callback: (msg: AppointmentSyncMessage) =
   };
 
   const handleStorage = (e: StorageEvent) => {
-    if (e.key === 'shiva_smile_last_sync_event' && e.newValue) {
+    if (e.key === 'd_care_last_sync_event' && e.newValue) {
       try {
         const parsed = JSON.parse(e.newValue) as AppointmentSyncMessage;
         callback(parsed);
