@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Shiva Smile Dental Care Hospital - Complete Database Schema & Security
+-- D Care Multi Speciality Dental Hospital - Complete Database Schema & Security
 -- Tables: public.appointments, public.clinic_settings
 -- Project Ref: rniyxelqdwfdogsnosgu
 -- ==============================================================================

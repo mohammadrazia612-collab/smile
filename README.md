@@ -1,6 +1,6 @@
-#D Care Multi Speciality Dental Hospital 🏥✨
+# D Care Multi Speciality Dental Hospital 🏥✨
 
-A modern, Apple-inspired website and secure patient management portal for **Shiva Smile Dental Care Hospital**, located in Azam Pura, Siddipet, Telangana.
+A modern, Apple-inspired website and secure patient management portal for **D Care Multi Speciality Dental Hospital**, located in Siddipet, Telangana.
 
 ---
 
@@ -10,7 +10,7 @@ A modern, Apple-inspired website and secure patient management portal for **Shiv
 - **Cinematic Apple Aesthetics**: Clean typography, subtle micro-interactions, dark/light contrast, and glassmorphism.
 - **Interactive Before/After Slider**: Clinical smile transformation showcase with dual-layer comparison.
 - **Interactive Anatomy & Physics**: Interactive clusters with inertia drag and touch physics.
-- **Comprehensive Clinical Services**: Quick services, in-depth treatment stories, technology keynote cards, and patient reviews.
+- **Verified Clinical Services**: General Dental Treatment, Braces / Orthodontic Treatment, Retainers, and Broken Tooth Treatment.
 - **Online Appointment Booking**:
   - Direct integration with Supabase.
   - Client-side validation, loading states, and duplicate submission prevention.
@@ -108,9 +108,12 @@ npm run preview
 
 ## 📍 Clinic Contact Information
 
-- **Hospital Name**: Shiva Smile Dental Care Hospital
-- **Location**: Azam Pura, Siddipet, Telangana 502103, India
-- **Phone**: +91 83098 64006
+- **Hospital Name**: D Care Multi Speciality Dental Hospital
+- **Location**: Siddipet – Medak Road, Beside Kotak Mahindra Bank, Near Prathiba Degree College, Siddipet, Telangana – 502103, India
+- **Phone**: +91 93918 84433
+- **Google Rating**: 4.9 / 5 (91 reviews)
 - **Hours**:
-  - Monday – Saturday: 10:00 AM – 8:00 PM
-  - Sunday: 10:30 AM – 2:00 PM
+  - Monday: 10:00 AM – 9:00 PM
+  - Tuesday: 9:00 AM – 9:00 PM
+  - Wednesday – Saturday: 10:00 AM – 9:00 PM
+  - Sunday: 9:00 AM – 5:00 PM

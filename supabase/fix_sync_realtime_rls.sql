@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Shiva Smile Dental Care Hospital - 1-Click Fix for Supabase Realtime & RLS Data Sync
+-- D Care Multi Speciality Dental Hospital - 1-Click Fix for Supabase Realtime & RLS Data Sync
 -- Project: rniyxelqdwfdogsnosgu (https://supabase.com/dashboard/project/rniyxelqdwfdogsnosgu/sql)
 --
 -- This script guarantees:

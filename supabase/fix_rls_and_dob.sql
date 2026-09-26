@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Shiva Smile Dental Care Hospital - 1-Click Fix for Supabase RLS & DOB
+-- D Care Multi Speciality Dental Hospital - 1-Click Fix for Supabase RLS & DOB
 -- Project: rniyxelqdwfdogsnosgu (https://supabase.com/dashboard/project/rniyxelqdwfdogsnosgu/sql)
 -- ==============================================================================
 
@@ -31,55 +31,4 @@ USING (true)
 WITH CHECK (true);
 
 -- 5. Ensure clinic_settings table exists for public booking toggle
-CREATE TABLE IF NOT EXISTS public.clinic_settings (
-    key TEXT PRIMARY KEY,
-    value TEXT NOT NULL,
-    description TEXT,
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
-);
-
-INSERT INTO public.clinic_settings (key, value, description)
-VALUES ('public_booking_enabled', 'true', 'Controls whether visitors can submit appointments on the public website')
-ON CONFLICT (key) DO NOTHING;
-
-ALTER TABLE public.clinic_settings ENABLE ROW LEVEL SECURITY;
-
-DROP POLICY IF EXISTS "Allow public read clinic settings" ON public.clinic_settings;
-CREATE POLICY "Allow public read clinic settings"
-ON public.clinic_settings
-FOR SELECT
-TO anon, authenticated
-USING (true);
-
-DROP POLICY IF EXISTS "Allow authenticated update clinic settings" ON public.clinic_settings;
-CREATE POLICY "Allow authenticated update clinic settings"
-ON public.clinic_settings
-FOR ALL
-TO authenticated
-USING (true)
-WITH CHECK (true);
-
--- 6. Enable Realtime Replication & Publication for Instant Admin Sync
-ALTER TABLE public.appointments REPLICA IDENTITY FULL;
-ALTER TABLE public.clinic_settings REPLICA IDENTITY FULL;
-
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_publication_tables 
-    WHERE pubname = 'supabase_realtime' 
-    AND schemaname = 'public' 
-    AND tablename = 'appointments'
-  ) THEN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.appointments;
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_publication_tables 
-    WHERE pubname = 'supabase_realtime' 
-    AND schemaname = 'public' 
-    AND tablename = 'clinic_settings'
-  ) THEN
-    ALTER PUBLICATION supabase_realtime ADD TABLE public.clinic_settings;
-  END IF;
-END $$;
+CREATE TABLE IF NOT EXISTS public.clinic_settings (\n    key TEXT PRIMARY KEY,\n    value TEXT NOT NULL,\n    description TEXT,\n    updated_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())\n);\n\nINSERT INTO public.clinic_settings (key, value, description)\nVALUES ('public_booking_enabled', 'true', 'Controls whether visitors can submit appointments on the public website')\nON CONFLICT (key) DO NOTHING;\n\nALTER TABLE public.clinic_settings ENABLE ROW LEVEL SECURITY;\n\nDROP POLICY IF EXISTS \"Allow public read clinic settings\" ON public.clinic_settings;\nCREATE POLICY \"Allow public read clinic settings\"\nON public.clinic_settings\nFOR SELECT\nTO anon, authenticated\nUSING (true);\n\nDROP POLICY IF EXISTS \"Allow authenticated update clinic settings\" ON public.clinic_settings;\nCREATE POLICY \"Allow authenticated update clinic settings\"\nON public.clinic_settings\nFOR ALL\nTO authenticated\nUSING (true)\nWITH CHECK (true);\n\n-- 6. Enable Realtime Replication & Publication for Instant Admin Sync\nALTER TABLE public.appointments REPLICA IDENTITY FULL;\nALTER TABLE public.clinic_settings REPLICA IDENTITY FULL;\n\nDO $$\nBEGIN\n  IF NOT EXISTS (\n    SELECT 1 FROM pg_publication_tables \n    WHERE pubname = 'supabase_realtime' \n    AND schemaname = 'public' \n    AND tablename = 'appointments'\n  ) THEN\n    ALTER PUBLICATION supabase_realtime ADD TABLE public.appointments;\n  END IF;\n\n  IF NOT EXISTS (\n    SELECT 1 FROM pg_publication_tables \n    WHERE pubname = 'supabase_realtime' \n    AND schemaname = 'public' \n    AND tablename = 'clinic_settings'\n  ) THEN\n    ALTER PUBLICATION supabase_realtime ADD TABLE public.clinic_settings;\n  END IF;\nEND $$;\n
