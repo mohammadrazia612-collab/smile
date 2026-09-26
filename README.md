@@ -1,4 +1,4 @@
-# Shiva Smile Dental Care Hospital 🏥✨
+#D Care Multi Speciality Dental Hospital 🏥✨
 
 A modern, Apple-inspired website and secure patient management portal for **Shiva Smile Dental Care Hospital**, located in Azam Pura, Siddipet, Telangana.
 
