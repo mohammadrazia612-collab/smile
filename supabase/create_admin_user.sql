@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Shiva Smile Dental Care Hospital - Create / Confirm Admin User
+-- D Care Multi Speciality Dental Hospital - Create / Confirm Admin User
 -- Run this in your Supabase SQL Editor:
 -- https://supabase.com/dashboard/project/rniyxelqdwfdogsnosgu/sql
 -- ==============================================================================
@@ -57,7 +57,7 @@ INSERT INTO auth.identities (
   created_at,
   updated_at
 )
-SELECT
+SELECT 
   u.id,
   u.id,
   format('{"sub":"%s","email":"%s"}', u.id::text, u.email)::jsonb,
